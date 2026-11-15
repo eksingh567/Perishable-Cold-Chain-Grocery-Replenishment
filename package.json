@@ -1,0 +1,22 @@
+{
+  "name": "perishable-cold-chain-grocery-replenishment",
+  "version": "1.0.0",
+  "description": "Camunda 8 (Zeebe) Perishable Cold-Chain Grocery Replenishment System with Real-Time Stitch UI Frontend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test tests/suite.test.js"
+  },
+  "keywords": [
+    "camunda",
+    "camunda-8",
+    "zeebe",
+    "bpmn",
+    "cold-chain",
+    "iot-telemetry",
+    "stitch",
+    "supply-chain"
+  ],
+  "author": "Hiren Pareek & Team",
+  "license": "MIT"
+}

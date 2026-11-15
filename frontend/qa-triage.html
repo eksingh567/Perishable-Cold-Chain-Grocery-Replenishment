@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ColdChain Sync - Cold-Chain In-Transit Telemetry &amp; QA Excursion Triage</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Inter & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with Forms and Container Queries plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration verbatim as mandated by design system -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "primary-fixed-dim": "#68dba9",
+            "on-surface-variant": "#bccac0",
+            "surface-container-highest": "#2d3449",
+            "on-secondary-fixed-variant": "#004b73",
+            "on-primary-fixed": "#002114",
+            "primary-fixed": "#85f8c4",
+            "surface-tint": "#68dba9",
+            "tertiary-fixed": "#ffddb8",
+            "tertiary-fixed-dim": "#ffb95f",
+            "on-tertiary-fixed": "#2a1700",
+            "surface-variant": "#2d3449",
+            "on-tertiary": "#472a00",
+            "primary-container": "#25a475",
+            "outline-variant": "#3d4a42",
+            "on-secondary-fixed": "#001d31",
+            "surface-container-high": "#222a3d",
+            "on-primary-fixed-variant": "#005137",
+            "surface": "#0b1326",
+            "primary": "#68dba9",
+            "on-error": "#690005",
+            "on-surface": "#dae2fd",
+            "tertiary-container": "#ca8100",
+            "error-container": "#93000a",
+            "outline": "#87948b",
+            "background": "#0b1326",
+            "inverse-on-surface": "#283044",
+            "on-tertiary-fixed-variant": "#653e00",
+            "surface-container-low": "#131b2e",
+            "error": "#ffb4ab",
+            "on-secondary": "#003351",
+            "secondary": "#93ccff",
+            "tertiary": "#ffb95f",
+            "surface-container-lowest": "#060e20",
+            "secondary-fixed-dim": "#93ccff",
+            "secondary-container": "#3198dc",
+            "on-primary-container": "#00311f",
+            "on-tertiary-container": "#3e2400",
+            "surface-container": "#171f33",
+            "on-primary": "#003825",
+            "on-error-container": "#ffdad6",
+            "surface-bright": "#31394d",
+            "on-background": "#dae2fd",
+            "inverse-primary": "#006c4a",
+            "surface-dim": "#0b1326",
+            "on-secondary-container": "#002c47",
+            "inverse-surface": "#dae2fd",
+            "secondary-fixed": "#cce5ff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-lg": "1rem",
+            "space-sm": "0.5rem",
+            "space-xl": "1.5rem",
+            "margin": "1rem",
+            "space-xs": "0.25rem",
+            "gutter-desktop": "1rem",
+            "gutter-tablet": "0.75rem",
+            "gutter": "0.75rem",
+            "margin-tablet": "1.25rem",
+            "space-md": "0.75rem",
+            "margin-desktop": "1.5rem"
+          },
+          "fontFamily": {
+            "body-lg": ["Inter"],
+            "label-code": ["JetBrains Mono"],
+            "headline-xl-mobile": ["Inter"],
+            "label-md": ["Inter"],
+            "body-md": ["Inter"],
+            "metric-display-mobile": ["JetBrains Mono"],
+            "metric-display": ["JetBrains Mono"],
+            "metric-lg": ["JetBrains Mono"],
+            "metric-sm": ["JetBrains Mono"],
+            "headline-xl": ["Inter"],
+            "headline-sm": ["Inter"],
+            "headline-md": ["Inter"],
+            "body-sm": ["Inter"],
+            "headline-lg": ["Inter"]
+          },
+          "fontSize": {
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "label-code": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "500" }],
+            "headline-xl-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "metric-display-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "metric-display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "metric-lg": ["20px", { "lineHeight": "26px", "fontWeight": "600" }],
+            "metric-sm": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+            "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    @keyframes pulse-halo {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 180, 171, 0.45); }
+      50% { box-shadow: 0 0 0 8px rgba(255, 180, 171, 0); }
+    }
+    .animate-pulse-halo {
+      animation: pulse-halo 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes radar-ping {
+      0% { transform: scale(0.95); opacity: 0.9; }
+      100% { transform: scale(2.4); opacity: 0; }
+    }
+    .animate-radar {
+      animation: radar-ping 1.8s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md text-body-md antialiased min-h-screen flex flex-col selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar Component Rendered in Strict Adherence to Shared Components JSON -->
+<header class="flex justify-between items-center w-full px-margin-desktop py-2 bg-surface-container-lowest/80 dark:bg-surface-container-lowest/80 backdrop-blur-md sticky top-0 z-50 border-b border-outline-variant dark:border-outline-variant shadow-sm dark:shadow-none">
+<!-- Brand / Product Identity -->
+<div class="flex items-center gap-6">
+<div class="font-headline-md text-headline-md font-bold tracking-tight text-on-surface dark:text-on-surface flex items-center gap-2">
+<span class="w-7 h-7 rounded bg-primary-container text-on-primary-container flex items-center justify-center font-label-code text-label-code font-bold">
+<span class="material-symbols-outlined" data-icon="ac_unit" style="font-size: 18px;">ac_unit</span>
+</span>
+<span>ColdChain Sync</span>
+</div>
+<!-- Navigation Links from JSON (Strict casing & tokens; active state matches intent: 'IoT Fleet & Telemetry') -->
+<nav class="hidden lg:flex items-center gap-6 ml-4 text-body-sm font-body-sm">
+<a class="text-on-surface-variant dark:text-on-surface-variant py-1 hover:text-on-surface dark:hover:text-on-surface font-normal transition-colors" href="index.html">Replenishment Hub</a>
+<a class="border-b-2 border-primary dark:border-primary text-primary dark:text-primary font-semibold py-1" href="qa-triage.html">IoT Fleet &amp; Telemetry</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant py-1 hover:text-on-surface dark:hover:text-on-surface font-normal transition-colors" href="index.html#rfq">Supplier RFQ &amp; POs</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant py-1 hover:text-on-surface dark:hover:text-on-surface font-normal transition-colors" href="qa-triage.html">QA Inspection</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant py-1 hover:text-on-surface dark:hover:text-on-surface font-normal transition-colors" href="index.html#settlements">Settlements</a>
+</nav>
+</div>
+<!-- Trailing Actions Cluster -->
+<div class="flex items-center gap-3">
+<!-- Zeebe Connected Pill -->
+<div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/60 font-label-code text-label-code text-primary">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span>Zeebe v8.4 Connected</span>
+</div>
+<!-- Simulate Incident CTA -->
+<button class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded bg-surface-variant text-on-surface hover:text-primary dark:hover:text-primary hover:bg-surface-container-high/40 transition-colors font-body-sm text-body-sm border border-outline-variant transition-all duration-150 ease-out active:scale-95" id="btnSimulateIncidentQA">
+<span class="material-symbols-outlined text-[16px]" data-icon="bolt">bolt</span>
+<span>Simulate Incident</span>
+</button>
+<!-- Trailing Icon Actions: notifications, tune, account_circle -->
+<div class="flex items-center gap-1 text-on-surface-variant">
+<button class="p-1.5 rounded hover:text-primary hover:bg-surface-container-high/40 transition-colors relative" id="btnNotificationsQA" title="Notifications">
+<span class="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error"></span>
+</button>
+<button class="p-1.5 rounded hover:text-primary hover:bg-surface-container-high/40 transition-colors" id="btnTuneQA" title="Settings / Tune">
+<span class="material-symbols-outlined text-[20px]" data-icon="tune">tune</span>
+</button>
+<button class="p-1.5 rounded hover:text-primary hover:bg-surface-container-high/40 transition-colors flex items-center gap-2" id="btnAccountQA" title="Operations Director Profile">
+<span class="material-symbols-outlined text-[22px] text-on-surface" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Sub-Header / Breadcrumb & Orchestration Workflow Context Bar -->
+<section class="w-full bg-surface-container-lowest border-b border-outline-variant px-margin-desktop py-3">
+<div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+<!-- Breadcrumb & Critical State Chips -->
+<div class="space-y-2">
+<div class="flex flex-wrap items-center gap-2 font-label-code text-label-code text-on-surface-variant">
+<span>Replenishment Hub</span>
+<span class="text-outline">/</span>
+<span>In-Transit Telemetry</span>
+<span class="text-outline">/</span>
+<span class="text-secondary font-semibold">Shipment #SHP-405 (Fresh Fields Dairy)</span>
+</div>
+<div class="flex flex-wrap items-center gap-2">
+<!-- Camunda BPMN Tag -->
+<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container border border-outline-variant text-on-surface font-label-code text-label-code">
+<span class="material-symbols-outlined text-secondary text-[14px]" data-icon="account_tree">account_tree</span>
+<span>Camunda Process: <span class="text-secondary">cold-chain-replenishment-main.bpmn</span></span>
+</div>
+<!-- Current State Sub-Process Alert Chip -->
+<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-tertiary-container/20 border border-tertiary/40 text-tertiary font-label-code text-label-code">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-ping"></span>
+<span>Current State: Non-Interrupting Event Sub-Process (IoT Excursion)</span>
+</div>
+<!-- Pulsing SLA Timer Countdown Badge -->
+<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-error-container/30 border border-error/50 text-error font-label-code text-label-code animate-pulse-halo">
+<span class="material-symbols-outlined text-error text-[14px]" data-icon="timer">timer</span>
+<span>SLA Timer: <strong class="tracking-wide" id="sla-timer">02m 14s</strong> remaining</span>
+</div>
+</div>
+</div>
+<!-- Header Action Controls -->
+<div class="flex items-center gap-2 self-start xl:self-center">
+<!-- Refresh Telemetry Button -->
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded bg-surface-container border border-outline-variant text-on-surface hover:text-primary hover:border-primary/50 transition-colors font-body-sm text-body-sm transition-all duration-150 ease-out active:scale-95" id="btnRefreshTelemetry">
+<span class="material-symbols-outlined text-[16px]" data-icon="refresh">refresh</span>
+<span>Refresh Telemetry</span>
+</button>
+<!-- Export Audit Trail -->
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded bg-surface-container border border-outline-variant text-on-surface hover:bg-surface-container-high transition-colors font-body-sm text-body-sm transition-all duration-150 ease-out active:scale-95" id="btnExportAudit">
+<span class="material-symbols-outlined text-[16px]" data-icon="file_download">file_download</span>
+<span>Export Audit Trail</span>
+</button>
+<!-- Quarantine Shipment (Danger Action) -->
+<button class="flex items-center gap-1.5 px-3.5 py-1.5 rounded bg-error-container text-error hover:bg-error-container/80 border border-error/40 transition-colors font-body-sm text-body-sm font-semibold transition-all duration-150 ease-out active:scale-95 shadow-sm" id="btnQuarantineShipment">
+<span class="material-symbols-outlined text-[16px]" data-icon="shield">shield</span>
+<span>Quarantine Shipment</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Main Canvas: 12-Column Responsive Workspace Grid -->
+<main class="flex-1 w-full px-margin-desktop py-space-md grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop">
+<!-- LEFT COLUMN (~58% / 7 cols) - IoT Telemetry Stream & Spatial Map -->
+<div class="lg:col-span-7 flex flex-col gap-space-md">
+<!-- Reefer Truck Header & Sensor Grid -->
+<section class="rounded-lg bg-surface-container-low/70 border border-outline-variant p-4 backdrop-blur-md">
+<div class="flex flex-wrap items-center justify-between pb-3 mb-3 border-b border-outline-variant/60 gap-2">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-container-high flex items-center justify-center border border-outline-variant text-primary">
+<span class="material-symbols-outlined text-[24px]" data-icon="local_shipping">local_shipping</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold tracking-tight">Reefer Truck #TK-904</h2>
+<span class="px-2 py-0.5 rounded bg-primary/10 border border-primary/30 text-primary font-label-code text-label-code">IoT Active Stream</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Driver: <strong class="text-on-surface font-medium">M. Hansen</strong> | Carrier: <span class="text-secondary font-medium">Apex Cold Logistics</span></p>
+</div>
+</div>
+<div class="text-right font-label-code text-label-code">
+<span class="text-on-surface-variant">Telemetry Protocol:</span>
+<span class="text-on-surface font-semibold ml-1">MQTT over TLS / CoAP</span>
+</div>
+</div>
+<!-- 5-Block Real-Time Metric Telemetry Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-2.5">
+<!-- Core Temp (CRITICAL EXCURSION) -->
+<div class="col-span-1 sm:col-span-2 xl:col-span-1 rounded bg-error-container/20 border-2 border-error p-3 relative overflow-hidden animate-pulse-halo">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-code text-label-code uppercase text-error font-bold">Core Temp</span>
+<span class="w-2.5 h-2.5 rounded-full bg-error animate-ping"></span>
+</div>
+<div class="font-metric-display text-metric-display text-error font-bold tracking-tight">8.4°C</div>
+<div class="mt-1 font-label-code text-label-code text-error/90 flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" data-icon="warning">warning</span>
+<span>+0.4°C SLA Breach (18m)</span>
+</div>
+</div>
+<!-- Ambient Cabin Temp -->
+<div class="rounded bg-surface-container border border-outline-variant p-3">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-code text-label-code uppercase text-on-surface-variant font-medium">Ambient Cabin</span>
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+</div>
+<div class="font-metric-lg text-metric-lg text-on-surface font-bold tracking-tight">9.1°C</div>
+<div class="mt-1 font-label-code text-label-code text-on-surface-variant">Cargo bay zone B</div>
+</div>
+<!-- Reefer Power / Fault -->
+<div class="rounded bg-tertiary-container/15 border border-tertiary/40 p-3">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-code text-label-code uppercase text-tertiary font-medium">Reefer Compressor</span>
+<span class="material-symbols-outlined text-tertiary text-[14px]" data-icon="error_outline">error_outline</span>
+</div>
+<div class="font-label-code text-label-code text-tertiary font-bold leading-tight">ERR-402</div>
+<div class="mt-1 font-label-code text-label-code text-tertiary/80 leading-tight">Pressure Drop Drop</div>
+</div>
+<!-- Door Sensor -->
+<div class="rounded bg-surface-container border border-outline-variant p-3">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-code text-label-code uppercase text-on-surface-variant font-medium">Door Sensor</span>
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+</div>
+<div class="font-metric-lg text-metric-lg text-primary font-bold tracking-tight">Closed</div>
+<div class="mt-1 font-label-code text-label-code text-primary/80">Secure / Sealed</div>
+</div>
+<!-- Battery Backup -->
+<div class="rounded bg-surface-container border border-outline-variant p-3">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-code text-label-code uppercase text-on-surface-variant font-medium">Battery Backup</span>
+<span class="material-symbols-outlined text-primary text-[14px]" data-icon="battery_charging_full">battery_charging_full</span>
+</div>
+<div class="font-metric-lg text-metric-lg text-on-surface font-bold tracking-tight">94%</div>
+<div class="mt-1 font-label-code text-label-code text-on-surface-variant">Stable Auxiliary</div>
+</div>
+</div>
+</section>
+<!-- Detailed Temperature History Chart (4h High-Fidelity Excursion Timeline) -->
+<section class="rounded-lg bg-surface-container-low/70 border border-outline-variant p-4 backdrop-blur-md flex flex-col">
+<div class="flex flex-wrap items-center justify-between mb-3 gap-2">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold flex items-center gap-2">
+<span>Historical Thermal Profile (12:00 – 16:00 UTC)</span>
+<span class="px-2 py-0.5 rounded bg-error-container/30 border border-error/40 text-error font-label-code text-label-code font-bold">18m 24s Excursion Spike</span>
+</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Calibrated telematics with critical threshold ceiling (+8.0°C)</p>
+</div>
+<!-- Chart Legend -->
+<div class="flex items-center gap-3 font-label-code text-label-code flex-wrap">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-0.5 bg-primary"></span>
+<span class="text-on-surface">Reefer Core Temp</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-0.5 border-t border-dashed border-error"></span>
+<span class="text-error">8.0°C Excursion SLA Threshold</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-0.5 bg-secondary opacity-60"></span>
+<span class="text-on-surface-variant">Ambient Reefer Temp</span>
+</div>
+</div>
+</div>
+<!-- SVG Line Chart with Dynamic Excursion Shading -->
+<div class="w-full h-56 bg-surface-container-lowest/80 rounded border border-outline-variant p-2 relative flex items-center justify-center overflow-hidden">
+<svg class="w-full h-full text-outline" preserveaspectratio="none" viewbox="0 0 760 210">
+<defs>
+<lineargradient id="excursionGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#ffb4ab" stop-opacity="0.35"></stop>
+<stop offset="100%" stop-color="#ffb4ab" stop-opacity="0.0"></stop>
+</lineargradient>
+<lineargradient id="safeGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#68dba9" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#68dba9" stop-opacity="0.0"></stop>
+</lineargradient>
+</defs>
+<!-- Horizontal Y-Grid lines -->
+<!-- 10.0°C -->
+<line stroke="#1e293b" stroke-width="1" x1="45" x2="745" y1="20" y2="20"></line>
+<text fill="#87948b" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="38" y="24">10.0°</text>
+<!-- 8.0°C SLA Threshold (Dashed Red Line) -->
+<line stroke="#ffb4ab" stroke-dasharray="4,4" stroke-width="1.5" x1="45" x2="745" y1="60" y2="60"></line>
+<text fill="#ffb4ab" font-family="JetBrains Mono" font-size="10" font-weight="bold" text-anchor="end" x="38" y="64">8.0°</text>
+<!-- 6.0°C Warning -->
+<line stroke="#1e293b" stroke-width="1" x1="45" x2="745" y1="100" y2="100"></line>
+<text fill="#87948b" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="38" y="104">6.0°</text>
+<!-- 4.0°C Normal Baseline -->
+<line stroke="#1e293b" stroke-width="1" x1="45" x2="745" y1="140" y2="140"></line>
+<text fill="#87948b" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="38" y="144">4.0°</text>
+<!-- 2.0°C -->
+<line stroke="#1e293b" stroke-width="1" x1="45" x2="745" y1="180" y2="180"></line>
+<text fill="#87948b" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="38" y="184">2.0°</text>
+<!-- Shaded Excursion Area (from x=575 [15:40] to x=725 [16:00]) -->
+<rect fill="#ffb4ab" fill-opacity="0.08" height="160" width="150" x="575" y="20"></rect>
+<line opacity="0.6" stroke="#ffb4ab" stroke-dasharray="2,2" stroke-width="1" x1="575" x2="575" y1="20" y2="180"></line>
+<!-- Ambient Temperature Curve (Faint Blue/Grey) -->
+<path d="M 45 130 
+                     C 120 128, 200 134, 280 130 
+                     C 360 126, 440 128, 520 125 
+                     C 560 115, 600 70, 640 45 
+                     C 670 42, 700 48, 745 42" fill="none" stroke="#93ccff" stroke-opacity="0.5" stroke-width="1.5"></path>
+<!-- Core Reefer Temp Curve -->
+<!-- Safe Zone (12:00 to 15:35): ~3.4°C to 3.8°C (y: 152 to 144) -->
+<!-- Spike at 15:40 (x:580) crossing 8.0°C line (y=60) peaking at 8.7°C (y=46) then dip to 8.4°C (y=52) at 16:00 (x:725) -->
+<path d="M 45 152 
+                     C 100 150, 180 156, 250 152 
+                     C 320 148, 400 154, 480 150 
+                     C 520 148, 550 146, 570 120 
+                     C 585 70, 610 46, 640 46 
+                     C 670 46, 690 54, 725 52" fill="none" stroke="#68dba9" stroke-width="2.5"></path>
+<!-- Excursion Over-Threshold Segment (Red highlighted stroke) -->
+<path d="M 580 60 
+                     C 595 50, 615 46, 640 46 
+                     C 670 46, 690 54, 725 52" fill="none" stroke="#ffb4ab" stroke-width="3"></path>
+<!-- Excursion Peak Marker (8.7°C) -->
+<circle cx="640" cy="46" fill="#ffb4ab" r="4.5" stroke="#690005" stroke-width="2"></circle>
+<!-- Current Telemetry Pin (8.4°C at 16:00) -->
+<circle class="animate-pulse" cx="725" cy="52" fill="#ffb4ab" r="5"></circle>
+<circle cx="725" cy="52" fill="none" opacity="0.6" r="9" stroke="#ffb4ab" stroke-width="1.5"></circle>
+<!-- Peak Callout Badge -->
+<g transform="translate(615, 14)">
+<rect fill="#93000a" height="18" rx="2" stroke="#ffb4ab" stroke-width="1" width="60" x="0" y="0"></rect>
+<text fill="#ffdad6" font-family="JetBrains Mono" font-size="10" font-weight="bold" text-anchor="middle" x="30" y="13">PEAK 8.7°C</text>
+</g>
+<!-- X-Axis Timestamps -->
+<text fill="#87948b" font-family="JetBrains Mono" font-size="10" x="45" y="198">12:00</text>
+<text fill="#87948b" font-family="JetBrains Mono" font-size="10" x="215" y="198">13:00</text>
+<text fill="#87948b" font-family="JetBrains Mono" font-size="10" x="385" y="198">14:00</text>
+<text fill="#87948b" font-family="JetBrains Mono" font-size="10" x="555" y="198">15:00</text>
+<text fill="#ffb4ab" font-family="JetBrains Mono" font-size="10" font-weight="bold" x="580" y="198">15:40 [!]</text>
+<text fill="#dae2fd" font-family="JetBrains Mono" font-size="10" font-weight="bold" x="725" y="198">16:00 (NOW)</text>
+</svg>
+</div>
+<div class="mt-2 flex items-center justify-between font-label-code text-label-code text-on-surface-variant">
+<span>Thermal range calibrated: USP &lt;1079&gt; Good Storage and Distribution Practices for Pharmaceuticals</span>
+<span class="text-tertiary">Continuous logging @ 5-sec sample intervals</span>
+</div>
+</section>
+<!-- GPS Route & Cold Hub Geo-fence (Stylized Tactical Dark Map Card) -->
+<section class="rounded-lg bg-surface-container-low/70 border border-outline-variant p-4 backdrop-blur-md flex-1 flex flex-col">
+<div class="flex flex-wrap items-center justify-between pb-2 mb-2 border-b border-outline-variant/60 gap-2">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="route">route</span>
+<span>Interstate Corridor 80 Telemetry Route</span>
+</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Valley Springs Depot → Store #12 (Metro Fresh Hypermarket)</p>
+</div>
+<div class="text-right font-label-code text-label-code">
+<span class="text-on-surface-variant">Current Location:</span>
+<span class="text-primary font-bold ml-1">Mile Marker 71</span>
+<span class="text-outline">|</span>
+<span class="text-secondary font-semibold">ETA: 16:22 UTC (14 miles remaining)</span>
+</div>
+</div>
+<!-- Stylized Vector Map Canvas Card -->
+<div class="w-full flex-1 min-h-[220px] bg-surface-container-lowest rounded border border-outline-variant relative overflow-hidden flex items-center justify-center p-4">
+<!-- Background Grid Texture & Topography Accents -->
+<div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: radial-gradient(#3d4a42 1px, transparent 1px); background-size: 24px 24px;"></div>
+<svg class="w-full h-full" preserveaspectratio="xMidYMid meet" viewbox="0 0 680 180">
+<!-- Simulated Highway Corridor & Geo-fence Rings -->
+<path d="M 40 140 Q 180 150 260 110 T 450 70 T 640 40" fill="none" stroke="#222a3d" stroke-linecap="round" stroke-width="18"></path>
+<path d="M 40 140 Q 180 150 260 110 T 450 70 T 640 40" fill="none" stroke="#334155" stroke-dasharray="6,4" stroke-width="4"></path>
+<!-- Geo-Fence Zone: Store #12 Receiving Dock Radius -->
+<circle cx="640" cy="40" fill="#004b73" fill-opacity="0.15" r="32" stroke="#3198dc" stroke-dasharray="3,3" stroke-width="1.5"></circle>
+<!-- Origin: Fresh Fields Dairy -->
+<circle cx="40" cy="140" fill="#68dba9" r="6"></circle>
+<text fill="#bccac0" font-family="Inter" font-size="11" font-weight="500" text-anchor="middle" x="40" y="165">Fresh Fields Dairy</text>
+<text fill="#87948b" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="40" y="176">Depot #01 (Departed 12:04)</text>
+<!-- Critical Excursion Event Location (Mile Marker 64.2 - at 15:40) -->
+<g transform="translate(390, 85)">
+<circle class="animate-radar" cx="0" cy="0" fill="#ffb4ab" fill-opacity="0.2" r="14"></circle>
+<circle cx="0" cy="0" fill="#ffb4ab" r="6" stroke="#93000a" stroke-width="2"></circle>
+<!-- Callout Pin -->
+<path d="M 0 -8 L 0 -22" stroke="#ffb4ab" stroke-width="1.5"></path>
+<rect fill="#93000a" height="20" rx="3" stroke="#ffb4ab" stroke-width="1" width="130" x="-65" y="-42"></rect>
+<text fill="#ffdad6" font-family="JetBrains Mono" font-size="9" font-weight="bold" text-anchor="middle" x="0" y="-28">EXCURSION: Mile 64.2 (15:40)</text>
+</g>
+<!-- Current Reefer Truck Location (Mile Marker 71) -->
+<g transform="translate(485, 62)">
+<circle cx="0" cy="0" fill="#25a475" r="8" stroke="#ffffff" stroke-width="2"></circle>
+<circle class="animate-ping" cx="0" cy="0" fill="none" opacity="0.6" r="16" stroke="#68dba9" stroke-width="1.5"></circle>
+<!-- Marker Label -->
+<rect fill="#171f33" height="18" rx="2" stroke="#68dba9" stroke-width="1" width="90" x="-45" y="14"></rect>
+<text fill="#68dba9" font-family="JetBrains Mono" font-size="9" font-weight="bold" text-anchor="middle" x="0" y="27">TK-904 (NOW: 58 mph)</text>
+</g>
+<!-- Destination: Store #12 -->
+<circle cx="640" cy="40" fill="#93ccff" r="6"></circle>
+<text fill="#93ccff" font-family="Inter" font-size="11" font-weight="bold" text-anchor="middle" x="640" y="22">Store #12 Hypermarket</text>
+<text fill="#87948b" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="640" y="86">Receiving Bay 04</text>
+</svg>
+</div>
+</section>
+</div>
+<!-- RIGHT COLUMN (~42% / 5 cols) - Camunda 8 Forms Integration & QA Decision Workspace -->
+<div class="lg:col-span-5 flex flex-col gap-space-md">
+<!-- Embedded Camunda 8 User Task Form Container -->
+<section class="rounded-lg bg-surface-container-low border-2 border-outline-variant p-4 backdrop-blur-md shadow-lg flex flex-col">
+<!-- Camunda Task Form Header with Zeebe Activity Key -->
+<div class="flex items-center justify-between pb-3 mb-4 border-b border-outline-variant">
+<div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold tracking-tight">QA Excursion Triage Decision</h2>
+</div>
+<p class="font-label-code text-label-code text-on-surface-variant mt-0.5">Form: <code class="text-secondary">qa-decision.form</code> | Camunda 8 Zeebe</p>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container-highest border border-outline font-label-code text-label-code text-on-surface">
+            Activity_QAExcursionTriage
+          </span>
+</div>
+<!-- Read-Only Process Variables Summary Panel -->
+<div class="rounded bg-surface-container-lowest p-3 border border-outline-variant/80 mb-4 space-y-2">
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface-variant font-label-code text-label-code">Incident ID</span>
+<span class="font-label-code text-label-code font-bold text-on-surface bg-surface-container px-2 py-0.5 rounded border border-outline-variant">EXC-2026-881</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface-variant font-label-code text-label-code">Triggered BPMN Event</span>
+<span class="font-label-code text-label-code text-tertiary font-semibold">Message: TempExcursionDetected (SHP-405)</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface-variant font-label-code text-label-code">Max Recorded Temp</span>
+<span class="font-label-code text-label-code text-error font-bold text-[13px]">8.7°C (+0.7°C Excursion Peak)</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface-variant font-label-code text-label-code">Excursion Cumulative Duration</span>
+<span class="font-label-code text-label-code text-error font-semibold">18m 24s (&gt; 15m Auto-Approval Ceiling)</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm pt-1 border-t border-outline-variant/40">
+<span class="text-on-surface-variant font-label-code text-label-code">Cargo Risk Assessment</span>
+<span class="font-body-sm text-body-sm text-error font-medium">High - Perishable Dairy &amp; Artisanal Cheeses (Lot #LT-9021)</span>
+</div>
+</div>
+<!-- Decision Form Controls (Interactive Camunda Form Select Cards) -->
+<form class="space-y-4" id="camunda-qa-form" onsubmit="event.preventDefault(); handleFormSubmit();">
+<div>
+<label class="block font-label-md text-label-md text-on-surface uppercase tracking-wider mb-2 font-semibold">
+              Select Camunda Routing Decision <span class="text-error">*</span>
+</label>
+<div class="space-y-2">
+<!-- Choice A: Reject Shipment -->
+<label class="cursor-pointer flex items-start gap-3 p-3 rounded border border-outline-variant hover:border-error/60 bg-surface-container/50 hover:bg-surface-container transition-all">
+<input class="mt-1 text-primary focus:ring-primary focus:ring-offset-background border-outline-variant bg-surface-container-lowest" id="radioDecision_0" name="qa_decision" required="" type="radio" value="REJECT_SHIPMENT"/>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-body-md text-body-md font-bold text-error">REJECT SHIPMENT</span>
+<span class="font-label-code text-[10px] px-1.5 py-0.2 rounded bg-error-container/40 text-error">BPMN Error</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                    Trigger BPMN Error <code class="font-label-code text-error">SHIPMENT_REJECTED</code> - auto-cancels purchase order and alerts supplier.
+                  </p>
+</div>
+</label>
+<!-- Choice B: Accept with Expedited QA (Recommended) -->
+<label class="cursor-pointer flex items-start gap-3 p-3 rounded border-2 border-primary/60 bg-primary/5 hover:bg-primary/10 transition-all relative">
+<input checked="" class="mt-1 text-primary focus:ring-primary focus:ring-offset-background border-outline-variant bg-surface-container-lowest" id="radioDecision_1" name="qa_decision" required="" type="radio" value="ACCEPT_EXPEDITED_QA"/>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-body-md text-body-md font-bold text-primary">ACCEPT WITH EXPEDITED QA</span>
+<span class="font-label-code text-[10px] px-1.5 py-0.2 rounded bg-primary-container text-on-primary-container font-semibold">RECOMMENDED</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                    Allow delivery to proceed directly to dock QA inspection bay with mandatory probe test.
+                  </p>
+</div>
+</label>
+<!-- Choice C: Reroute to Cold Storage -->
+<label class="cursor-pointer flex items-start gap-3 p-3 rounded border border-outline-variant hover:border-secondary/60 bg-surface-container/50 hover:bg-surface-container transition-all">
+<input class="mt-1 text-primary focus:ring-primary focus:ring-offset-background border-outline-variant bg-surface-container-lowest" id="radioDecision_2" name="qa_decision" required="" type="radio" value="REROUTE_COLD_STORAGE"/>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-body-md text-body-md font-bold text-secondary">REROUTE TO COLD STORAGE</span>
+<span class="font-label-code text-[10px] px-1.5 py-0.2 rounded bg-surface-container-high text-on-surface">Sub-Route</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                    Divert to nearest regional depot (Depot #4 North) for rapid blast chilling.
+                  </p>
+</div>
+</label>
+</div>
+</div>
+<!-- Mandatory QA Reviewer Rationale Textarea -->
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<label class="font-label-md text-label-md text-on-surface font-semibold" for="qa-notes">
+                Mandatory QA Reviewer Rationale <span class="text-error">*</span>
+</label>
+<span class="font-label-code text-label-code text-on-surface-variant" id="char-counter">134 / 500 chars</span>
+</div>
+<textarea class="w-full rounded bg-surface-container-lowest border border-outline-variant focus:border-secondary focus:ring-2 focus:ring-secondary/20 text-on-surface font-body-sm text-body-sm p-2.5 placeholder-outline resize-none" id="qa-notes" oninput="updateCharCount(this)" required="" rows="3">Excursion confirmed above 8.0°C limit for 18m 24s due to reefer ERR-402 pressure anomaly. Core dairy goods remain under pasteurization danger mark (10.0°C). Mandatory dock probe required.</textarea>
+<p class="mt-1 font-label-code text-label-code text-on-surface-variant">ISO-22000 Food Safety compliant sign-off captured into immutable audit trail.</p>
+</div>
+<!-- Digital Sign-off CTA button -->
+<div class="pt-2">
+<button class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded bg-primary-container text-on-primary-container font-body-md text-body-md font-bold hover:bg-primary transition-colors border border-primary/50 transition-all duration-150 ease-out active:scale-95 shadow-md" id="btnSubmitDecision" type="submit">
+<span class="material-symbols-outlined text-[20px]" data-icon="task_alt">task_alt</span>
+<span>Submit QA Decision to Zeebe</span>
+</button>
+<div class="flex items-center justify-center gap-1.5 mt-2 font-label-code text-label-code text-on-surface-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span>Correlated to Zeebe Job ID #982144-QA-TRIAGE</span>
+</div>
+</div>
+</form>
+</section>
+<!-- Post-Delivery QA Inspection Protocol (Camunda 'qa-inspection.form' preview card) -->
+<section class="rounded-lg bg-surface-container-low/70 border border-outline-variant p-4 backdrop-blur-md flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-2 mb-3 border-b border-outline-variant/60">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]" data-icon="fact_check">fact_check</span>
+<span>Post-Delivery QA Inspection Protocol</span>
+</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Dock Receiving Checklist (Camunda <code class="text-secondary font-label-code">qa-inspection.form</code>)</p>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container font-label-code text-label-code text-on-surface-variant border border-outline-variant">
+              Pending Dock Arrival
+            </span>
+</div>
+<!-- Dock Checklist Items -->
+<div class="space-y-2 font-body-sm text-body-sm">
+<label class="flex items-start gap-2.5 p-2 rounded bg-surface-container/40 border border-outline-variant/40 hover:bg-surface-container">
+<input class="mt-0.5 rounded text-primary focus:ring-primary border-outline-variant bg-surface-container-lowest" id="checkInspection_0" type="checkbox"/>
+<span class="text-on-surface">Digital probe core temperature test (<strong class="text-primary font-label-code">&lt; 6.0°C</strong> at 3 carton depths)</span>
+</label>
+<label class="flex items-start gap-2.5 p-2 rounded bg-surface-container/40 border border-outline-variant/40 hover:bg-surface-container">
+<input class="mt-0.5 rounded text-primary focus:ring-primary border-outline-variant bg-surface-container-lowest" id="checkInspection_1" type="checkbox"/>
+<span class="text-on-surface">Visual inspection for spoilage / carton bulging / weeping seals</span>
+</label>
+<label class="flex items-start gap-2.5 p-2 rounded bg-surface-container/40 border border-outline-variant/40 hover:bg-surface-container">
+<input checked="" class="mt-0.5 rounded text-primary focus:ring-primary border-outline-variant bg-surface-container-lowest" id="checkInspection_2" type="checkbox"/>
+<span class="text-on-surface">Expiry date &amp; batch lot verification (<strong class="text-secondary font-label-code">Lot #LT-9021</strong> verified in ERP)</span>
+</label>
+<label class="flex items-start gap-2.5 p-2 rounded bg-surface-container/40 border border-outline-variant/40 hover:bg-surface-container">
+<input class="mt-0.5 rounded text-primary focus:ring-primary border-outline-variant bg-surface-container-lowest" id="checkInspection_3" type="checkbox"/>
+<span class="text-on-surface">Packaging seal intact &amp; physical tamper sensor status verified</span>
+</label>
+</div>
+</div>
+<div class="pt-3 mt-3 border-t border-outline-variant/40 flex items-center justify-between font-label-code text-label-code text-on-surface-variant">
+<span>Assigned Inspector: <strong class="text-on-surface">Dock QA Team B</strong></span>
+<span class="text-secondary">Expected Dock: Bay 04</span>
+</div>
+</section>
+</div>
+</main>
+<!-- Bottom Audit Trail & Zeebe Orchestration Log (Collapsible Full-Width Drawer) -->
+<section class="w-full bg-surface-container-lowest border-t border-outline-variant px-margin-desktop py-3">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]" data-icon="terminal">terminal</span>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-semibold text-sm">Real-Time Orchestration &amp; Telemetry Event Log</h4>
+<span class="font-label-code text-label-code px-2 py-0.5 rounded bg-surface-container text-primary border border-outline-variant">5 Live Events</span>
+</div>
+<button class="font-label-code text-label-code text-on-surface-variant hover:text-on-surface flex items-center gap-1" id="btnCollapseLog" onclick="toggleLogDrawer()">
+<span id="log-toggle-text">Collapse View</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="expand_more" id="log-toggle-icon">expand_more</span>
+</button>
+</div>
+<!-- Data Grid Timeline of Workflow Events -->
+<div class="overflow-x-auto rounded border border-outline-variant/60 bg-surface-container-low/50" id="log-drawer-content">
+<table class="w-full text-left font-label-code text-label-code border-collapse">
+<thead>
+<tr class="border-b border-outline-variant bg-surface-container text-on-surface-variant uppercase">
+<th class="py-2 px-3">ISO-8601 UTC Stamp</th>
+<th class="py-2 px-3">Engine Component</th>
+<th class="py-2 px-3">Event Key / Action</th>
+<th class="py-2 px-3">Payload Correlation / Status</th>
+<th class="py-2 px-3 text-right">Execution Latency</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/40 text-on-surface">
+<tr class="hover:bg-surface-container/30 transition-colors">
+<td class="py-2 px-3 text-on-surface-variant">2026-03-30T15:40:12.102Z</td>
+<td class="py-2 px-3 text-tertiary">IoT Gateway</td>
+<td class="py-2 px-3 font-semibold text-error">Temperature Spike Alert (8.2°C &gt; 8.0°C SLA limit)</td>
+<td class="py-2 px-3 text-on-surface-variant">telemetryId=TEL-88029 | sensorId=REEFER-CORE-01</td>
+<td class="py-2 px-3 text-right text-on-surface-variant">12ms</td>
+</tr>
+<tr class="hover:bg-surface-container/30 transition-colors">
+<td class="py-2 px-3 text-on-surface-variant">2026-03-30T15:40:14.340Z</td>
+<td class="py-2 px-3 text-primary">Zeebe Engine</td>
+<td class="py-2 px-3 font-semibold text-secondary">Message Catch Event: TempExcursionDetected</td>
+<td class="py-2 px-3 text-on-surface-variant">correlationKey=SHP-405 | instanceKey=90028172</td>
+<td class="py-2 px-3 text-right text-on-surface-variant">4ms</td>
+</tr>
+<tr class="hover:bg-surface-container/30 transition-colors">
+<td class="py-2 px-3 text-on-surface-variant">2026-03-30T15:40:15.012Z</td>
+<td class="py-2 px-3 text-on-surface">Service Task</td>
+<td class="py-2 px-3 font-semibold">REST: Fetch Excursion Detail 200 OK</td>
+<td class="py-2 px-3 text-on-surface-variant">payload 4.2kb | workerId=worker-rest-coldchain-04</td>
+<td class="py-2 px-3 text-right text-on-surface-variant">88ms</td>
+</tr>
+<tr class="hover:bg-surface-container/30 transition-colors">
+<td class="py-2 px-3 text-on-surface-variant">2026-03-30T15:40:16.290Z</td>
+<td class="py-2 px-3 text-secondary">Connector</td>
+<td class="py-2 px-3 font-semibold">Slack Notification dispatched</td>
+<td class="py-2 px-3 text-on-surface-variant">channel=#coldchain-qa-ops | messageTs=1743349216</td>
+<td class="py-2 px-3 text-right text-on-surface-variant">142ms</td>
+</tr>
+<tr class="hover:bg-surface-container/30 transition-colors bg-primary/5">
+<td class="py-2 px-3 text-on-surface-variant">2026-03-30T15:40:17.844Z</td>
+<td class="py-2 px-3 text-primary font-bold">User Task Created</td>
+<td class="py-2 px-3 font-semibold text-primary">Activity_QAExcursionTriage</td>
+<td class="py-2 px-3 text-on-surface-variant">Assignee: Unassigned | Candidate Group: coldchain-qa</td>
+<td class="py-2 px-3 text-right text-primary font-bold">ACTIVE</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Technical Status Bar at Extreme Footer -->
+<footer class="w-full bg-surface-container-lowest border-t border-outline-variant px-margin-desktop py-1.5 flex flex-wrap items-center justify-between text-body-sm font-label-code text-label-code text-on-surface-variant">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span>Camunda 8 Zeebe Cluster: <strong class="text-on-surface">camunda-cloud-prod-us-east</strong></span>
+</div>
+<span class="text-outline">|</span>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[13px] text-primary" data-icon="cloud_sync">cloud_sync</span>
+<span>gRPC Stream: <span class="text-primary font-bold">HEALTHY</span> (120 rps)</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span>Workflow Instance: <code class="text-secondary font-bold">#90028172</code></span>
+<span class="text-outline">|</span>
+<span class="text-error font-semibold">SLA Timer active (auto-escalation to Director at 00m 00s)</span>
+</div>
+</footer>
+<!-- Notification Toast Placeholder (Hidden by default, triggered on submit) -->
+<div class="fixed bottom-12 right-6 hidden z-50 p-4 rounded bg-surface-container-high border-2 border-primary shadow-2xl flex items-center gap-3 text-on-surface font-body-sm" id="toast-success">
+<span class="material-symbols-outlined text-primary text-[24px]" data-icon="check_circle">check_circle</span>
+<div>
+<div class="font-bold text-on-surface">Zeebe Job Completed Successfully</div>
+<div class="font-label-code text-label-code text-on-surface-variant">Task Activity_QAExcursionTriage resolved with decision variable.</div>
+</div>
+</div>
+<!-- Inline Lightweight Micro-Interactions Script -->
+<script>
+    // Live SLA Countdown Simulation
+    let remainingSeconds = 134; // 02m 14s
+    const timerElement = document.getElementById('sla-timer');
+
+    setInterval(() => {
+      if (remainingSeconds > 0) {
+        remainingSeconds--;
+        const mins = String(Math.floor(remainingSeconds / 60)).padStart(2, '0');
+        const secs = String(remainingSeconds % 60).padStart(2, '0');
+        if (timerElement) {
+          timerElement.textContent = `${mins}m ${secs}s`;
+        }
+      }
+    }, 1000);
+
+    // Textarea Character Counter
+    function updateCharCount(textarea) {
+      const counter = document.getElementById('char-counter');
+      if (counter) {
+        counter.textContent = `${textarea.value.length} / 500 chars`;
+      }
+    }
+
+    // Toggle Collapsible Log Drawer
+    let isDrawerOpen = true;
+    function toggleLogDrawer() {
+      const drawer = document.getElementById('log-drawer-content');
+      const text = document.getElementById('log-toggle-text');
+      const icon = document.getElementById('log-toggle-icon');
+      if (!drawer) return;
+
+      isDrawerOpen = !isDrawerOpen;
+      if (isDrawerOpen) {
+        drawer.style.display = 'block';
+        text.textContent = 'Collapse View';
+        icon.textContent = 'expand_more';
+      } else {
+        drawer.style.display = 'none';
+        text.textContent = 'Expand View';
+        icon.textContent = 'expand_less';
+      }
+    }
+
+    // Form Submission Feedback
+    function handleFormSubmit() {
+      const btn = document.getElementById('btn-submit-decision');
+      const toast = document.getElementById('toast-success');
+      
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `
+          <span class="material-symbols-outlined text-[20px] animate-spin" data-icon="sync">sync</span>
+          <span>Committing Decision to Zeebe gRPC...</span>
+        `;
+      }
+
+      setTimeout(() => {
+        if (btn) {
+          btn.innerHTML = `
+            <span class="material-symbols-outlined text-[20px]" data-icon="check">check</span>
+            <span>Task Committed & Correlated</span>
+          `;
+          btn.classList.remove('bg-primary-container', 'hover:bg-primary');
+          btn.classList.add('bg-surface-container-highest', 'text-on-surface-variant', 'border-outline');
+        }
+
+        if (toast) {
+          toast.classList.remove('hidden');
+          setTimeout(() => {
+            toast.classList.add('hidden');
+          }, 4500);
+        }
+      }, 1200);
+    }
+
+    // Telemetry Refresh button animation
+    const refreshBtn = document.getElementById('btn-refresh');
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', () => {
+        const icon = refreshBtn.querySelector('.material-symbols-outlined');
+        if (icon) {
+          icon.classList.add('animate-spin');
+          setTimeout(() => {
+            icon.classList.remove('animate-spin');
+          }, 800);
+        }
+      });
+    }
+  </script>
+
+<!-- Quarantine Confirmation Modal -->
+<div id="modalQuarantine" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  <div class="bg-surface-container-high border border-error/50 rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
+    <div class="flex items-center gap-3 pb-3 border-b border-outline-variant">
+      <div class="p-2.5 rounded-full bg-error-container text-error">
+        <span class="material-symbols-outlined text-[24px]">shield_with_heart</span>
+      </div>
+      <div>
+        <h3 class="font-headline-sm text-base font-bold text-on-surface">Confirm Shipment Quarantine</h3>
+        <p class="text-xs text-on-surface-variant">Truck #TK-904 (Carrier: Apex Cold)</p>
+      </div>
+    </div>
+    <div class="py-4 text-xs text-on-surface space-y-2">
+      <p>Are you sure you want to trigger emergency quarantine for <strong>Shipment SHP-405</strong>?</p>
+      <div class="p-3 bg-surface-container rounded border border-outline-variant text-[11px] text-on-surface-variant font-label-code">
+        • Carrier rerouted to Regional Depot #4 (Blast Chilling)<br>
+        • Zeebe BPMN Error SHIPMENT_REJECTED primed<br>
+        • Store Manager and QA Desk notified via Slack & SMTP
+      </div>
+    </div>
+    <div class="pt-3 border-t border-outline-variant flex gap-2 justify-end">
+      <button id="btnCancelQuarantine" class="px-3 py-1.5 rounded bg-surface-container border border-outline-variant text-xs text-on-surface hover:bg-surface-bright">Cancel</button>
+      <button id="btnConfirmQuarantine" class="px-4 py-1.5 rounded bg-error text-on-error font-semibold text-xs hover:bg-error/90 flex items-center gap-1 active:scale-95 shadow">
+        <span class="material-symbols-outlined text-[16px]">gavel</span>
+        <span>Execute Quarantine</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- QA Decision Submitted Modal -->
+<div id="modalDecisionSubmitted" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  <div class="bg-surface-container-high border border-primary/50 rounded-2xl w-full max-w-md p-6 shadow-2xl relative text-center">
+    <div class="mx-auto w-12 h-12 rounded-full bg-primary/20 text-primary flex items-center justify-center mb-3">
+      <span class="material-symbols-outlined text-[32px]">task_alt</span>
+    </div>
+    <h3 class="font-headline-sm text-lg font-bold text-on-surface">QA Decision Committed</h3>
+    <p class="text-xs text-on-surface-variant mt-1" id="decisionSummaryText">Decision committed to Zeebe cluster for Shipment SHP-405.</p>
+    
+    <div class="my-4 p-3 bg-surface-container rounded-lg border border-outline-variant text-left text-[11px] font-label-code text-on-surface-variant space-y-1">
+      <p><strong>Correlated Message:</strong> TempExcursionDetected</p>
+      <p><strong>User Task Key:</strong> Activity_QAExcursionTriage</p>
+      <p><strong>Status:</strong> COMPLETED (200 OK)</p>
+    </div>
+
+    <div class="flex gap-2 justify-center">
+      <button id="btnReturnDashboard" class="px-4 py-2 rounded bg-primary text-on-primary font-semibold text-xs hover:bg-primary-fixed active:scale-95 flex items-center gap-1 shadow">
+        <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+        <span>Return to Dashboard</span>
+      </button>
+      <button id="btnCloseDecisionModal" class="px-4 py-2 rounded bg-surface-container border border-outline-variant text-on-surface text-xs hover:bg-surface-bright">
+        Stay on Page
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Floating Toast Container -->
+<div id="toastContainerQA" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+
+<script>
+  // Universal Audio Synthesizer
+  function playAudioChime(type) {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      const now = ctx.currentTime;
+      if (type === 'success') {
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.1);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+        osc.start(now);
+        osc.stop(now + 0.3);
+      } else if (type === 'warning' || type === 'error') {
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.setValueAtTime(349.23, now + 0.15);
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+        osc.start(now);
+        osc.stop(now + 0.35);
+      }
+    } catch(e) {}
+  }
+
+  function showToast(title, message, type = 'success') {
+    playAudioChime(type);
+    const container = document.getElementById('toastContainerQA');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = `pointer-events-auto flex items-start gap-3 p-3.5 rounded-xl border shadow-xl transition-all duration-300 transform translate-y-2 opacity-0 text-xs ${
+      type === 'error' ? 'bg-error-container/90 border-error/50 text-error' :
+      type === 'warning' ? 'bg-tertiary-container/90 border-tertiary/50 text-tertiary' :
+      'bg-surface-container-high border-primary/40 text-on-surface'
+    }`;
+
+    const iconName = type === 'error' ? 'report' : type === 'warning' ? 'warning' : 'check_circle';
+    const iconColor = type === 'error' ? 'text-error' : type === 'warning' ? 'text-tertiary' : 'text-primary';
+
+    toast.innerHTML = `
+      <span class="material-symbols-outlined ${iconColor} text-[20px] mt-0.5">${iconName}</span>
+      <div class="flex-1">
+        <p class="font-bold font-body-sm">${title}</p>
+        <p class="text-on-surface-variant text-[11px] mt-0.5">${message}</p>
+      </div>
+      <button class="text-on-surface-variant hover:text-on-surface p-1" onclick="this.parentElement.remove()">
+        <span class="material-symbols-outlined text-[16px]">close</span>
+      </button>
+    `;
+
+    container.appendChild(toast);
+    setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+    setTimeout(() => {
+      toast.classList.add('opacity-0', 'translate-y-2');
+      setTimeout(() => toast.remove(), 300);
+    }, 4500);
+  }
+
+  // 1. Refresh Telemetry Button
+  const btnRefresh = document.getElementById('btnRefreshTelemetry');
+  let currentTemp = 8.4;
+  if (btnRefresh) {
+    btnRefresh.addEventListener('click', () => {
+      const icon = btnRefresh.querySelector('.material-symbols-outlined');
+      if (icon) icon.classList.add('animate-spin');
+      btnRefresh.disabled = true;
+
+      setTimeout(() => {
+        if (icon) icon.classList.remove('animate-spin');
+        btnRefresh.disabled = false;
+        // Jitter temp slightly
+        currentTemp = (8.2 + Math.random() * 0.4).toFixed(1);
+        const tempDisplays = document.querySelectorAll('h3, p, span');
+        tempDisplays.forEach(el => {
+          if (el.textContent.includes('8.4°C') || el.textContent.includes('8.2°C') || el.textContent.includes('8.5°C')) {
+            el.textContent = `${currentTemp}°C`;
+          }
+        });
+        showToast('Telemetry Refreshed', `Received real-time packet from Truck #TK-904: Core Temp ${currentTemp}°C, Cabin Temp 9.1°C`, 'info');
+      }, 700);
+    });
+  }
+
+  // 2. Export Audit Trail
+  const btnExport = document.getElementById('btnExportAudit');
+  if (btnExport) {
+    btnExport.addEventListener('click', () => {
+      const auditData = {
+        shipmentId: "SHP-405",
+        carrier: "Apex Cold Logistics",
+        truckNumber: "TK-904",
+        driver: "M. Hansen",
+        excursionEventId: "EXC-2026-881",
+        criticalLimitC: 8.0,
+        recordedPeakTempC: 8.7,
+        excursionDuration: "18m 24s",
+        zeebeLog: [
+          { time: "15:40:12 UTC", component: "IoT Gateway", event: "Temperature Spike Alert (8.2°C > 8.0°C SLA)" },
+          { time: "15:40:14 UTC", component: "Zeebe Broker", event: "Message Catch Event: TempExcursionDetected correlated" },
+          { time: "15:40:15 UTC", component: "REST Worker", event: "GET /telemetry/excursions returned 200 OK" },
+          { time: "15:40:16 UTC", component: "Slack Connector", event: "Dispatched critical excursion alert to #coldchain-qa-ops" },
+          { time: "15:40:17 UTC", component: "Tasklist", event: "User Task Created: Activity_QAExcursionTriage" }
+        ]
+      };
+      const blob = new Blob([JSON.stringify(auditData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'coldchain-audit-trail-SHP-405.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Audit Trail Exported', 'Downloaded coldchain-audit-trail-SHP-405.json', 'success');
+    });
+  }
+
+  // 3. Quarantine Shipment Modal & Execution
+  const btnQuarantine = document.getElementById('btnQuarantineShipment');
+  const modalQuarantine = document.getElementById('modalQuarantine');
+  const btnCancelQuarantine = document.getElementById('btnCancelQuarantine');
+  const btnConfirmQuarantine = document.getElementById('btnConfirmQuarantine');
+
+  if (btnQuarantine && modalQuarantine) {
+    btnQuarantine.addEventListener('click', () => modalQuarantine.classList.remove('hidden'));
+  }
+  if (btnCancelQuarantine && modalQuarantine) {
+    btnCancelQuarantine.addEventListener('click', () => modalQuarantine.classList.add('hidden'));
+  }
+  if (btnConfirmQuarantine && modalQuarantine) {
+    btnConfirmQuarantine.addEventListener('click', () => {
+      modalQuarantine.classList.add('hidden');
+      if (btnQuarantine) {
+        btnQuarantine.disabled = true;
+        btnQuarantine.innerHTML = '<span class="material-symbols-outlined text-[16px]">lock</span> QUARANTINED';
+        btnQuarantine.classList.remove('bg-error-container', 'text-error');
+        btnQuarantine.classList.add('bg-error', 'text-on-error');
+      }
+      showToast('Shipment Quarantined', 'Truck #TK-904 diverted to Regional Depot #4. Incident logged to Zeebe timeline.', 'error');
+    });
+  }
+
+  // 4. Interactive Decision Cards
+  const decisionCards = document.querySelectorAll('label, div');
+  let selectedDecision = 'ACCEPT_EXPEDITED_QA';
+
+  const radio0 = document.getElementById('radioDecision_0');
+  const radio1 = document.getElementById('radioDecision_1');
+  const radio2 = document.getElementById('radioDecision_2');
+
+  [radio0, radio1, radio2].forEach(r => {
+    if (!r) return;
+    r.addEventListener('change', () => {
+      selectedDecision = r.value;
+      showToast('Decision Selected', `Target BPMN path: ${selectedDecision}`, 'info');
+    });
+  });
+
+  // 5. Dock Receiving Checklist Progress
+  const checks = [
+    document.getElementById('checkInspection_0'),
+    document.getElementById('checkInspection_1'),
+    document.getElementById('checkInspection_2'),
+    document.getElementById('checkInspection_3')
+  ];
+
+  checks.forEach((c, idx) => {
+    if (!c) return;
+    c.addEventListener('change', () => {
+      const checkedCount = checks.filter(x => x && x.checked).length;
+      showToast('Checklist Updated', `${checkedCount} of 4 QA inspection steps verified.`, 'info');
+    });
+  });
+
+  // 6. Submit Decision to Zeebe
+  const btnSubmitDecision = document.getElementById('btnSubmitDecision');
+  const modalDecisionSubmitted = document.getElementById('modalDecisionSubmitted');
+  const btnReturnDashboard = document.getElementById('btnReturnDashboard');
+  const btnCloseDecisionModal = document.getElementById('btnCloseDecisionModal');
+  const decisionSummaryText = document.getElementById('decisionSummaryText');
+
+  if (btnSubmitDecision) {
+    btnSubmitDecision.addEventListener('click', () => {
+      const textarea = document.querySelector('textarea');
+      const rationale = textarea ? textarea.value : '';
+
+      btnSubmitDecision.disabled = true;
+      btnSubmitDecision.innerHTML = `
+        <span class="material-symbols-outlined text-[20px] animate-spin">sync</span>
+        <span>Committing Decision to Zeebe gRPC...</span>
+      `;
+
+      setTimeout(() => {
+        btnSubmitDecision.innerHTML = `
+          <span class="material-symbols-outlined text-[20px]">check_circle</span>
+          <span>Decision Committed</span>
+        `;
+        btnSubmitDecision.classList.remove('bg-primary-container', 'hover:bg-primary');
+        btnSubmitDecision.classList.add('bg-surface-container-highest', 'text-on-surface-variant');
+
+        if (decisionSummaryText) {
+          decisionSummaryText.textContent = `Executed decision '${selectedDecision}' for Incident EXC-2026-881. Transitioning to Dock Receiving.`;
+        }
+        if (modalDecisionSubmitted) {
+          modalDecisionSubmitted.classList.remove('hidden');
+        }
+        showToast('QA Decision Committed', `Correlated to Zeebe Task Activity_QAExcursionTriage. Engine resumed.`, 'success');
+      }, 1000);
+    });
+  }
+
+  if (btnReturnDashboard) {
+    btnReturnDashboard.addEventListener('click', () => {
+      window.location.href = 'index.html';
+    });
+  }
+  if (btnCloseDecisionModal && modalDecisionSubmitted) {
+    btnCloseDecisionModal.addEventListener('click', () => {
+      modalDecisionSubmitted.classList.add('hidden');
+    });
+  }
+
+  // 7. Top Header Buttons
+  const btnSimQA = document.getElementById('btnSimulateIncidentQA');
+  if (btnSimQA) {
+    btnSimQA.addEventListener('click', () => {
+      showToast('Incident Re-Simulated', 'Temperature spike packet re-dispatched. Sensor alert active.', 'warning');
+    });
+  }
+
+  const btnNotifsQA = document.getElementById('btnNotificationsQA');
+  if (btnNotifsQA) {
+    btnNotifsQA.addEventListener('click', () => {
+      showToast('Notifications', '1 critical excursion alert: Shipment SHP-405 exceeds 8.0°C limit.', 'info');
+    });
+  }
+
+  const btnTuneQA = document.getElementById('btnTuneQA');
+  if (btnTuneQA) {
+    btnTuneQA.addEventListener('click', () => {
+      showToast('Engine Settings', 'Configured: Zeebe 8.5+ Cluster | Boundary SLA: PT5M | Critical Temp: 8.0°C', 'info');
+    });
+  }
+
+  const btnAccountQA = document.getElementById('btnAccountQA');
+  if (btnAccountQA) {
+    btnAccountQA.addEventListener('click', () => {
+      showToast('Logged In User', 'Signed in as: Senior QA Lead (coldchain-qa group)', 'info');
+    });
+  }
+</script>
+
+</body></html>

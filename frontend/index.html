@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ColdChain Sync - Automated Perishable Replenishment Platform</title>
+<!-- Google Fonts: Inter & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config directly adhering to Design System & Theme -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-container": "#ca8100",
+            "surface": "#0b1326",
+            "tertiary": "#ffb95f",
+            "on-error": "#690005",
+            "error": "#ffb4ab",
+            "primary-fixed-dim": "#68dba9",
+            "surface-container-highest": "#2d3449",
+            "inverse-on-surface": "#283044",
+            "on-primary-fixed": "#002114",
+            "inverse-primary": "#006c4a",
+            "on-background": "#dae2fd",
+            "secondary-fixed-dim": "#93ccff",
+            "primary-fixed": "#85f8c4",
+            "on-tertiary-container": "#3e2400",
+            "surface-container": "#171f33",
+            "on-primary-fixed-variant": "#005137",
+            "inverse-surface": "#dae2fd",
+            "surface-container-low": "#131b2e",
+            "on-tertiary": "#472a00",
+            "outline": "#87948b",
+            "on-surface": "#dae2fd",
+            "on-primary-container": "#00311f",
+            "on-tertiary-fixed-variant": "#653e00",
+            "on-secondary-container": "#002c47",
+            "secondary-container": "#3198dc",
+            "background": "#0b1326",
+            "on-error-container": "#ffdad6",
+            "on-primary": "#003825",
+            "primary": "#68dba9",
+            "surface-bright": "#31394d",
+            "error-container": "#93000a",
+            "secondary": "#93ccff",
+            "surface-variant": "#2d3449",
+            "outline-variant": "#3d4a42",
+            "primary-container": "#25a475",
+            "surface-tint": "#68dba9",
+            "surface-container-high": "#222a3d",
+            "surface-dim": "#0b1326",
+            "surface-container-lowest": "#060e20",
+            "on-surface-variant": "#bccac0",
+            "secondary-fixed": "#cce5ff",
+            "on-tertiary-fixed": "#2a1700",
+            "on-secondary-fixed-variant": "#004b73",
+            "on-secondary-fixed": "#001d31",
+            "on-secondary": "#003351",
+            "tertiary-fixed-dim": "#ffb95f",
+            "tertiary-fixed": "#ffddb8"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "gutter": "0.75rem",
+            "space-md": "0.75rem",
+            "gutter-desktop": "1rem",
+            "space-xl": "1.5rem",
+            "margin-desktop": "1.5rem",
+            "space-xs": "0.25rem",
+            "gutter-tablet": "0.75rem",
+            "margin-tablet": "1.25rem",
+            "margin": "1rem",
+            "space-lg": "1rem",
+            "space-sm": "0.5rem"
+          },
+          "fontFamily": {
+            "headline-xl": ["Inter"],
+            "label-md": ["Inter"],
+            "headline-md": ["Inter"],
+            "label-code": ["JetBrains Mono"],
+            "metric-lg": ["JetBrains Mono"],
+            "body-md": ["Inter"],
+            "headline-xl-mobile": ["Inter"],
+            "metric-display-mobile": ["JetBrains Mono"],
+            "body-lg": ["Inter"],
+            "metric-sm": ["JetBrains Mono"],
+            "body-sm": ["Inter"],
+            "headline-lg": ["Inter"],
+            "headline-sm": ["Inter"],
+            "metric-display": ["JetBrains Mono"]
+          },
+          "fontSize": {
+            "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "label-code": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "500" }],
+            "metric-lg": ["20px", { "lineHeight": "26px", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "headline-xl-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "metric-display-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "metric-sm": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "metric-display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.03em", "fontWeight": "700" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    /* Glassmorphic Tactical Instrumentation */
+    .cockpit-panel {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid #1e293b;
+    }
+    .cockpit-panel-elevated {
+      background: rgba(30, 41, 59, 0.95);
+      border: 1px solid #334155;
+      box-shadow: 0 8px 32px -4px rgba(2, 6, 23, 0.6);
+    }
+    /* Dynamic Pulse for SLA & Telemetry */
+    @keyframes pulse-emerald {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.15); }
+    }
+    .status-beacon-green {
+      animation: pulse-emerald 2s infinite ease-in-out;
+    }
+    @keyframes pulse-amber {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+      50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
+    }
+    .status-beacon-warn {
+      animation: pulse-amber 1.8s infinite;
+    }
+    /* SVG Telemetry Glow Animation */
+    .telemetry-line-glow {
+      filter: drop-shadow(0px 0px 4px rgba(104, 219, 169, 0.7));
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen flex flex-col selection:bg-primary-container selection:text-on-primary-container">
+<!-- ==================== TOP NAVIGATION BAR (SHARED COMPONENT EXECUTION) ==================== -->
+<header class="flex justify-between items-center w-full px-margin-desktop py-2 bg-surface-container-lowest/80 dark:bg-surface-container-lowest/80 backdrop-blur-md sticky top-0 z-50 border-b border-outline-variant dark:border-outline-variant shadow-sm dark:shadow-none">
+<!-- Left: Brand Logo & Product Name -->
+<div class="flex items-center gap-6">
+<div class="font-headline-md text-headline-md font-bold tracking-tight text-on-surface dark:text-on-surface flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high border border-outline-variant flex items-center justify-center text-primary relative">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="ac_unit">ac_unit</span>
+<span class="material-symbols-outlined text-primary-fixed absolute -bottom-1 -right-1 text-sm font-bold" data-icon="eco">eco</span>
+</div>
+<div class="flex flex-col">
+<span class="leading-none text-on-surface font-headline-md">ColdChain Sync</span>
+<span class="font-label-code text-[10px] text-primary tracking-wider uppercase mt-0.5">Zeebe Engine v8.4</span>
+</div>
+</div>
+<!-- Navigation Links Cluster (Desktop) -->
+<nav class="hidden md:flex items-center gap-6 ml-4">
+<!-- 'Replenishment Hub' matches current intent -> ACTIVE -->
+<a class="flex items-center gap-2 text-primary font-semibold border-b-2 border-primary pb-1" href="index.html">
+<span class="material-symbols-outlined text-base" data-icon="sync_alt">sync_alt</span>
+          Replenishment Hub
+        </a>
+<a class="text-on-surface-variant dark:text-on-surface-variant py-1 hover:text-on-surface dark:hover:text-on-surface font-normal font-body-sm text-body-sm flex items-center gap-1.5 transition-colors" href="qa-triage.html" id="navLinkFleet">
+<span class="material-symbols-outlined text-base" data-icon="sensors">sensors</span>
+          IoT Fleet &amp; Telemetry
+        </a>
+<a class="text-on-surface-variant dark:text-on-surface-variant py-1 hover:text-on-surface dark:hover:text-on-surface font-normal font-body-sm text-body-sm flex items-center gap-1.5 transition-colors" href="#" id="navLinkRFQ">
+<span class="material-symbols-outlined text-base" data-icon="request_quote">request_quote</span>
+          Supplier RFQ &amp; POs
+        </a>
+<a class="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors pb-1" href="qa-triage.html" id="navLinkQA">
+<span class="material-symbols-outlined text-base" data-icon="fact_check">fact_check</span>
+          QA Inspection
+        </a>
+<a class="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors pb-1" href="#" id="navLinkSettlements">
+<span class="material-symbols-outlined text-base" data-icon="account_balance">account_balance</span>
+          Settlements
+        </a>
+</nav>
+</div>
+<!-- Center/Right Meta & Actions -->
+<div class="flex items-center gap-3">
+<!-- Active Store Selector -->
+<div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container border border-outline-variant/60">
+<span class="material-symbols-outlined text-secondary text-base" data-icon="storefront">storefront</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Store #12 - Metro Fresh Hypermarket</span>
+<!-- Warning Badge -->
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-tertiary bg-tertiary-container/20 border border-tertiary/40 font-label-code text-[10px] status-beacon-warn">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+          1 Excursion Warning
+        </span>
+</div>
+<!-- Quick Stats Pill (Zeebe Status) -->
+<div class="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-low border border-outline-variant/40">
+<span class="w-2 h-2 rounded-full bg-primary status-beacon-green"></span>
+<span class="font-label-code text-label-code text-on-surface-variant">Active Instance: <strong class="text-on-surface font-semibold">REQ-1001</strong></span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-label-code text-label-code text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" data-icon="autorenew">autorenew</span>
+          Zeebe v8.4 Connected
+        </span>
+</div>
+<!-- Trailing Action: Simulate Incident (per JSON prompt instructions) -->
+<button class="px-3 py-1.5 rounded-lg text-error bg-error-container/30 border border-error/40 hover:bg-error-container/50 font-label-code text-label-code flex items-center gap-1.5 transition-all duration-150 ease-out active:scale-95" id="simulateIncidentBtn">
+<span class="material-symbols-outlined text-sm" data-icon="crisis_alert">crisis_alert</span>
+        Simulate Incident
+      </button>
+<!-- Trailing Action Icons -->
+<div class="flex items-center gap-1 border-l border-outline-variant/60 pl-2">
+<!-- notifications -->
+<button class="relative p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-high/40 rounded-lg transition-colors" id="btnNotifications" title="Notifications">
+<span class="material-symbols-outlined text-xl" data-icon="notifications">notifications</span>
+<span class="absolute top-1 right-1 w-4 h-4 bg-error text-on-error font-label-code text-[9px] font-bold rounded-full flex items-center justify-center">3</span>
+</button>
+<!-- tune -->
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-high/40 rounded-lg transition-colors" id="btnTuneSettings" title="Settings &amp; Parameters">
+<span class="material-symbols-outlined text-xl" data-icon="tune">tune</span>
+</button>
+</div>
+<!-- User Profile -->
+<div class="flex items-center gap-2.5 pl-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant overflow-hidden flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant text-2xl" data-icon="account_circle">account_circle</span>
+</div>
+<div class="hidden sm:flex flex-col text-left">
+<span class="font-body-sm text-body-sm font-semibold text-on-surface leading-tight">Elena Rostova</span>
+<span class="font-label-code text-[10px] text-on-surface-variant">Operations Director</span>
+</div>
+</div>
+</div>
+</header>
+<!-- ==================== MAIN DASHBOARD VIEWPORT ==================== -->
+<main class="flex-1 w-full max-w-[1720px] mx-auto px-margin-desktop py-space-xl flex flex-col gap-space-xl">
+<!-- SUBHEADER / CONTEXT BANNER -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-outline-variant/30">
+<div>
+<div class="flex items-center gap-2.5">
+<h1 class="font-headline-lg text-headline-lg text-on-surface font-bold tracking-tight">Perishable Replenishment Hub</h1>
+<span class="px-2.5 py-0.5 rounded-full text-primary bg-primary/10 border border-primary/30 font-label-code text-label-code">
+            BPMN 2.0 Live Stream
+          </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+          Automated multi-instance procurement, cold-chain IoT threshold verification, and 3-way invoice match executed on Zeebe Cloud cluster.
+        </p>
+</div>
+<div class="flex items-center gap-3 self-start md:self-auto">
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-low border border-outline-variant text-on-surface-variant font-label-code text-label-code">
+<span class="material-symbols-outlined text-sm text-secondary" data-icon="schedule">schedule</span>
+          Last Heartbeat: <span class="text-on-surface font-semibold" id="clock-utc">15:58:24 UTC</span>
+</div>
+<button class="px-3.5 py-1.5 rounded-lg bg-primary text-on-primary font-body-sm text-body-sm font-semibold hover:bg-primary-fixed transition-colors flex items-center gap-1.5 shadow-sm active:scale-95" id="btnNewReplenishment" title="Start New Replenishment">
+<span class="material-symbols-outlined text-base" data-icon="add_circle">add_circle</span>
+          New Manual Replenishment
+        </button>
+</div>
+</div>
+<!-- SECTION 1: EXECUTIVE KPI SUMMARY CARDS (4-Column Bento Grid) -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-lg">
+<!-- KPI Card 1: Active Replenishment Requests -->
+<div class="cockpit-panel rounded-xl p-space-lg flex flex-col justify-between relative overflow-hidden group hover:border-outline transition-colors">
+<div class="flex items-center justify-between">
+<span class="font-label-code text-label-code text-on-surface-variant tracking-wider uppercase">Active Replenishment Requests</span>
+<span class="w-2 h-2 rounded-full bg-primary status-beacon-green"></span>
+</div>
+<div class="my-3 flex items-baseline gap-3">
+<span class="font-metric-display text-metric-display text-on-surface tracking-tight font-bold">12</span>
+<span class="font-metric-lg text-metric-lg text-on-surface-variant font-normal">Batches</span>
+<span class="ml-auto inline-flex items-center gap-1 px-2 py-0.5 rounded text-primary bg-primary/10 border border-primary/25 font-label-code text-label-code">
+<span class="material-symbols-outlined text-xs" data-icon="trending_up">trending_up</span>
+            +25% vs last week
+          </span>
+</div>
+<div class="pt-2 border-t border-outline-variant/30 flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span>+3 from yesterday</span>
+<span class="text-tertiary font-label-code text-label-code">1 pending sign-off</span>
+</div>
+</div>
+<!-- KPI Card 2: IoT Fleet Avg Temp -->
+<div class="cockpit-panel rounded-xl p-space-lg flex flex-col justify-between relative overflow-hidden group hover:border-outline transition-colors">
+<div class="flex items-center justify-between">
+<span class="font-label-code text-label-code text-on-surface-variant tracking-wider uppercase">Cold-Chain IoT Fleet Avg Temp</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-secondary bg-secondary/15 border border-secondary/30 font-label-code text-label-code">
+            Optimal Range
+          </span>
+</div>
+<div class="my-3 flex items-baseline gap-2">
+<span class="font-metric-display text-metric-display text-secondary tracking-tight font-bold">3.8°C</span>
+<span class="text-on-surface-variant font-label-code text-label-code">across 18 active reefers</span>
+</div>
+<!-- Thermal Range Gauge Segment -->
+<div class="space-y-1">
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden flex">
+<div class="w-1/4 bg-secondary/70" title="Superchill 0°C-2°C"></div>
+<div class="w-1/2 bg-primary" title="Safe Band 2°C-6°C"></div>
+<div class="w-1/8 bg-tertiary" title="Warning 6°C-8°C"></div>
+<div class="w-1/8 bg-error" title="Excursion &gt;8°C"></div>
+</div>
+<div class="flex justify-between font-label-code text-[10px] text-on-surface-variant pt-0.5">
+<span>Range: 2.0°C - 6.0°C</span>
+<span class="text-error font-semibold">Max Permissible SLA: 8.0°C</span>
+</div>
+</div>
+</div>
+<!-- KPI Card 3: Active RFQ Turnaround -->
+<div class="cockpit-panel rounded-xl p-space-lg flex flex-col justify-between relative overflow-hidden group hover:border-outline transition-colors">
+<div class="flex items-center justify-between">
+<span class="font-label-code text-label-code text-on-surface-variant tracking-wider uppercase">Active RFQ Turnaround</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-primary bg-primary/10 border border-primary/25 font-label-code text-label-code">
+            Camunda Parallel RFQs
+          </span>
+</div>
+<div class="my-3 flex items-baseline gap-3">
+<span class="font-metric-display text-metric-display text-on-surface tracking-tight font-bold">1.4</span>
+<span class="font-metric-lg text-metric-lg text-on-surface-variant font-normal">hrs</span>
+<span class="ml-auto font-label-code text-label-code text-primary-fixed-dim">Target &lt; 2.5 hrs</span>
+</div>
+<div class="pt-2 border-t border-outline-variant/30 text-on-surface-variant font-body-sm text-body-sm flex items-center gap-1.5">
+<span class="material-symbols-outlined text-xs text-primary" data-icon="device_hub">device_hub</span>
+<span>3 regional dairies responding concurrently via multi-instance tasks</span>
+</div>
+</div>
+<!-- KPI Card 4: 3-Way Match Success Rate -->
+<div class="cockpit-panel rounded-xl p-space-lg flex flex-col justify-between relative overflow-hidden group hover:border-outline transition-colors">
+<div class="flex items-center justify-between">
+<span class="font-label-code text-label-code text-on-surface-variant tracking-wider uppercase">3-Way Match Success Rate</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-primary bg-primary/10 border border-primary/25 font-label-code text-label-code">
+            Automated Settlement
+          </span>
+</div>
+<div class="my-3 flex items-baseline gap-2">
+<span class="font-metric-display text-metric-display text-primary tracking-tight font-bold">96.2%</span>
+<span class="text-on-surface-variant font-label-code text-label-code">auto-cleared</span>
+</div>
+<div class="pt-2 border-t border-outline-variant/30 text-on-surface-variant font-body-sm text-body-sm flex items-center justify-between">
+<span>Auto-Matched: <strong class="text-on-surface font-semibold">$4,850</strong></span>
+<span class="font-label-code text-label-code text-on-surface-variant">Cap: $5,000</span>
+</div>
+</div>
+</section>
+<!-- SECTION 2: TWO-COLUMN MAIN CONTENT (Telemetry + Camunda Human Workflow Tasks) -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+<!-- LEFT COLUMN: Featured Live In-Transit Telemetry Card (7 Cols) -->
+<div class="lg:col-span-7 cockpit-panel-elevated rounded-xl p-space-lg sm:p-space-xl flex flex-col gap-space-lg relative" id="telemetryCard">
+<!-- Live Alert Banner (Simulated upon trigger) -->
+<div class="hidden px-4 py-2.5 rounded-lg bg-error-container/40 border border-error/70 text-on-error-container flex items-center justify-between" id="excursionAlertBanner">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+<span class="font-body-sm text-body-sm font-semibold">CRITICAL ALERT: Sensor Spike 8.4°C Detected! Camunda Boundary Catch Event Tripped.</span>
+</div>
+<button class="font-label-code text-xs underline text-error hover:text-on-surface" id="dismissAlertBtn">Dismiss</button>
+</div>
+<!-- Card Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-outline-variant/40">
+<div class="flex items-start sm:items-center gap-3">
+<div class="p-2 rounded-lg bg-surface-container-high border border-outline-variant text-primary">
+<span class="material-symbols-outlined text-2xl" data-icon="local_shipping">local_shipping</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface">Shipment SHP-402 (Green Valley Dairy)</h2>
+<span class="w-2 h-2 rounded-full bg-primary status-beacon-green"></span>
+</div>
+<p class="font-label-code text-label-code text-on-surface-variant mt-0.5">
+                Route: Cloverdale Logistics Park → Store #12 • Truck #TK-882 (Reefer Dual-Chamber)
+              </p>
+</div>
+</div>
+<!-- SLA Boundary Timer -->
+<div class="flex flex-col items-end bg-surface-container-low px-3 py-2 rounded-lg border border-outline-variant/60">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-tertiary text-sm" data-icon="timer">timer</span>
+<span class="font-metric-lg text-metric-lg font-bold text-tertiary tracking-tight" id="sla-timer">03:42</span>
+<span class="font-label-code text-[10px] text-on-surface-variant">remaining</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-28 h-1 bg-surface-container-highest rounded-full overflow-hidden mt-1.5">
+<div class="h-full bg-tertiary w-3/4 animate-pulse"></div>
+</div>
+<span class="font-label-code text-[9px] text-on-surface-variant mt-1 tracking-wider uppercase">Camunda Timer Boundary Event</span>
+</div>
+</div>
+<!-- Interactive Detailed Temperature Trend Chart -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between font-label-code text-label-code">
+<span class="text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-xs text-primary" data-icon="show_chart">show_chart</span>
+              Continuous Telemetry Trace (Last 2 Hours: 14:00 - 16:00 UTC)
+            </span>
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1 text-on-surface-variant">
+<span class="w-3 h-0.5 bg-primary inline-block"></span> Reefer Core Temp
+              </span>
+<span class="flex items-center gap-1 text-error">
+<span class="w-3 h-0.5 border-b border-dashed border-error inline-block"></span> 8.0°C SLA Excursion Limit
+              </span>
+</div>
+</div>
+<!-- Chart Area with SVG Vector Rendering -->
+<div class="w-full h-56 bg-surface-container-low/70 rounded-lg border border-outline-variant/40 p-3 relative overflow-hidden flex flex-col justify-between">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 700 200">
+<defs>
+<!-- Safe Band Gradient -->
+<lineargradient id="safeBandGrad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#0284c7" stop-opacity="0.18"></stop>
+<stop offset="100%" stop-color="#68dba9" stop-opacity="0.04"></stop>
+</lineargradient>
+<!-- Line Glow Filter -->
+<lineargradient id="lineGrad" x1="0" x2="1" y1="0" y2="0">
+<stop offset="0%" stop-color="#3198dc"></stop>
+<stop offset="70%" stop-color="#68dba9"></stop>
+<stop offset="100%" stop-color="#85f8c4"></stop>
+</lineargradient>
+</defs>
+<!-- Safe Zone Background Rect (2.0°C to 6.0°C mapping) -->
+<!-- Height mapped: 0°C is y=190, 10°C is y=10. Safe 2°C (y=154) to 6°C (y=82) -->
+<rect fill="url(#safeBandGrad)" height="72" width="700" x="0" y="82"></rect>
+<line stroke="#3198dc" stroke-dasharray="3 3" stroke-opacity="0.4" stroke-width="0.7" x1="0" x2="700" y1="82" y2="82"></line>
+<line stroke="#68dba9" stroke-dasharray="3 3" stroke-opacity="0.4" stroke-width="0.7" x1="0" x2="700" y1="154" y2="154"></line>
+<!-- Horizontal Grid Lines -->
+<line stroke="#ef4444" stroke-dasharray="5 5" stroke-opacity="0.8" stroke-width="1.2" x1="0" x2="700" y1="46" y2="46"></line>
+<!-- Text for threshold -->
+<text fill="#ffb4ab" font-family="JetBrains Mono" font-size="10" font-weight="600" text-anchor="end" x="690" y="41">
+                CRITICAL BREACH THRESHOLD (8.0°C)
+              </text>
+<!-- Telemetry Curve (values: 14:00=3.2°C, 14:20=3.0°C, 14:40=3.5°C, 15:00=2.9°C, 15:20=3.8°C, 15:40=3.6°C, 15:58=4.2°C) -->
+<!-- 10C=10, 8C=46, 6C=82, 4C=118, 2C=154, 0C=190 -->
+<path class="telemetry-line-glow" d="M 0,132 C 60,135 100,138 150,136 C 220,133 270,123 340,127 C 400,131 460,139 520,121 C 580,105 620,125 660,114 L 685,114" fill="none" stroke="url(#lineGrad)" stroke-width="2.5"></path>
+<!-- Data Point Nodes -->
+<circle cx="150" cy="136" fill="#68dba9" r="3.5" stroke="#0b1326" stroke-width="1.5"></circle>
+<circle cx="340" cy="127" fill="#68dba9" r="3.5" stroke="#0b1326" stroke-width="1.5"></circle>
+<circle cx="520" cy="121" fill="#68dba9" r="3.5" stroke="#0b1326" stroke-width="1.5"></circle>
+<!-- Latest Interactive Target Point with Pulsing Ring -->
+<circle cx="685" cy="114" fill="#85f8c4" r="5"></circle>
+<circle class="animate-ping" cx="685" cy="114" fill="none" r="9" stroke="#68dba9" stroke-width="1.5"></circle>
+</svg>
+<!-- Callout Tooltip Overlay on Latest Point -->
+<div class="absolute right-6 top-16 bg-surface-container-high/95 border border-primary/60 px-2.5 py-1.5 rounded shadow-lg backdrop-blur-md flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-label-code text-xs text-on-surface font-semibold">4.2°C at 15:58 UTC</span>
+<span class="font-label-code text-[10px] text-primary bg-primary/10 px-1 rounded">Optimal Safe</span>
+</div>
+<!-- X-Axis Timeline Labels -->
+<div class="flex justify-between font-label-code text-[10px] text-on-surface-variant border-t border-outline-variant/30 pt-1.5 px-1">
+<span>14:00 (Dock Out)</span>
+<span>14:30</span>
+<span>15:00</span>
+<span>15:30</span>
+<span class="text-primary font-bold">15:58 (Live Heartbeat)</span>
+</div>
+</div>
+</div>
+<!-- Real-Time Telemetry Sensor Metrics Row (4 Bento Sub-Cards) -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-sm">
+<div class="bg-surface-container rounded-lg p-2.5 border border-outline-variant/40 flex flex-col">
+<span class="font-label-code text-[10px] text-on-surface-variant uppercase">Current Temp</span>
+<div class="flex items-center justify-between mt-1">
+<span class="font-metric-lg text-metric-lg font-bold text-primary" id="live-temp-display">4.2°C</span>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-label-code bg-primary/15 text-primary border border-primary/30">Safe</span>
+</div>
+<span class="font-label-code text-[9px] text-on-surface-variant mt-1">Delta: +0.2°C/hr</span>
+</div>
+<div class="bg-surface-container rounded-lg p-2.5 border border-outline-variant/40 flex flex-col">
+<span class="font-label-code text-[10px] text-on-surface-variant uppercase">Ambient Humidity</span>
+<div class="flex items-center justify-between mt-1">
+<span class="font-metric-lg text-metric-lg font-bold text-secondary">88%</span>
+<span class="font-label-code text-xs text-on-surface-variant">RH</span>
+</div>
+<span class="font-label-code text-[9px] text-on-surface-variant mt-1">Target: 85 - 92%</span>
+</div>
+<div class="bg-surface-container rounded-lg p-2.5 border border-outline-variant/40 flex flex-col">
+<span class="font-label-code text-[10px] text-on-surface-variant uppercase">Compressor Status</span>
+<div class="flex items-center justify-between mt-1">
+<span class="font-headline-sm text-sm font-semibold text-on-surface">Dual Loop</span>
+<span class="material-symbols-outlined text-sm text-primary" data-icon="check_circle">check_circle</span>
+</div>
+<span class="font-label-code text-[9px] text-on-surface-variant mt-1">Load 62% • Carrier 850</span>
+</div>
+<div class="bg-surface-container rounded-lg p-2.5 border border-outline-variant/40 flex flex-col">
+<span class="font-label-code text-[10px] text-on-surface-variant uppercase">GPS Geofence</span>
+<div class="flex items-center justify-between mt-1">
+<span class="font-headline-sm text-sm font-semibold text-on-surface">Mile 42</span>
+<span class="material-symbols-outlined text-sm text-secondary" data-icon="near_me">near_me</span>
+</div>
+<span class="font-label-code text-[9px] text-secondary font-medium mt-1">ETA: 16:15 Dock 4</span>
+</div>
+</div>
+<!-- Telemetry Bottom Action Bar -->
+<div class="pt-3 border-t border-outline-variant/40 flex flex-wrap items-center justify-between gap-3">
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 rounded-lg text-tertiary bg-tertiary-container/20 border border-tertiary/40 hover:bg-tertiary-container/35 font-label-code text-label-code font-semibold flex items-center gap-1.5 transition-colors active:scale-95" id="triggerSpikeBtn">
+<span class="material-symbols-outlined text-sm" data-icon="electric_bolt">electric_bolt</span>
+              Simulate Excursion Trigger
+            </button>
+<button class="px-3 py-1.5 rounded-lg text-on-surface-variant bg-surface-container-high/60 border border-outline-variant hover:text-on-surface hover:bg-surface-container-high font-label-code text-label-code transition-colors flex items-center gap-1.5 active:scale-95" id="btnOpenTelemetryLog" title="View Sensor Logs">
+<span class="material-symbols-outlined text-sm" data-icon="terminal">terminal</span>
+              Open Full Telemetry Log
+            </button>
+</div>
+<span class="font-label-code text-[10px] text-on-surface-variant">
+            Audit ID: <code class="text-on-surface font-semibold">TEL-882-990-UTC</code>
+</span>
+</div>
+</div>
+<!-- RIGHT COLUMN: Camunda Human Workflow Tasks Pane (5 Cols) -->
+<div class="lg:col-span-5 cockpit-panel rounded-xl p-space-lg flex flex-col justify-between gap-space-md">
+<!-- Header -->
+<div class="flex items-center justify-between pb-2 border-b border-outline-variant/40">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="assignment_ind">assignment_ind</span>
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface">Camunda Human Tasks</h2>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-label-code bg-tertiary-container/25 text-tertiary border border-tertiary/40 font-semibold">
+            3 Pending Action
+          </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Zeebe engine user tasks requiring operational authorization, QA dispute bypass, or accounting exception sign-off.
+        </p>
+<!-- Tasks Stack -->
+<div class="flex flex-col gap-3">
+<!-- Task Card 1: Review & Approve Replenishment -->
+<div class="bg-surface-container-low rounded-lg p-3 border border-outline-variant/60 hover:border-primary/50 transition-colors flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="check_circle">check_circle</span>
+<span class="font-headline-sm text-xs font-bold text-on-surface">Review &amp; Approve Replenishment</span>
+</div>
+<span class="font-label-code text-[10px] px-2 py-0.5 rounded bg-tertiary-container/30 text-tertiary border border-tertiary/30">
+                Timer SLA: 15m
+              </span>
+</div>
+<div class="font-label-code text-xs text-on-surface-variant">
+              Request <strong class="text-on-surface">REQ-1001</strong> • Store #12 Metro Fresh • Budget Cap: $5,000 (<span class="text-primary font-semibold">Allocated: $4,850</span>)
+            </div>
+<div class="bg-surface-container p-2 rounded text-body-sm font-label-code text-[11px] text-on-surface flex justify-between">
+<span>200x Milk 1L Whole Organic</span>
+<span>150x Greek Yogurt 500g</span>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<button class="flex-1 py-1.5 px-3 rounded bg-primary text-on-primary font-body-sm text-xs font-semibold hover:bg-primary-fixed transition-colors flex items-center justify-center gap-1 active:scale-95" id="btnApproveBatch" title="Approve Request">
+<span class="material-symbols-outlined text-xs" data-icon="done_all">done_all</span> Approve Batch
+              </button>
+<button class="py-1.5 px-3 rounded bg-surface-container-high border border-outline-variant text-on-surface font-body-sm text-xs hover:bg-surface-bright transition-colors active:scale-95" id="btnRejectModify" title="Reject Request">
+                Reject / Modify
+              </button>
+</div>
+</div>
+<!-- Task Card 2: QA Excursion Triage -->
+<div class="bg-surface-container-low rounded-lg p-3 border border-error/50 bg-error-container/10 flex flex-col gap-2 relative overflow-hidden">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-error text-sm" data-icon="error">error</span>
+<span class="font-headline-sm text-xs font-bold text-error">QA Excursion Triage</span>
+</div>
+<span class="font-label-code text-[10px] px-2 py-0.5 rounded bg-error-container/60 text-error border border-error/40 font-semibold">
+                Interrupting Sub-Process
+              </span>
+</div>
+<p class="font-body-sm text-xs text-on-surface-variant">
+              Shipment <strong class="text-on-surface font-label-code">SHP-405</strong> triggered sensor spike <span class="text-error font-bold font-label-code">8.4°C (&gt;15 min duration)</span>.
+            </p>
+<div class="flex items-center justify-between font-label-code text-[10px] text-on-surface-variant">
+<span>Lot: #LT-9021 Artisanal Cheese</span>
+<span class="text-error">BPMN Status: Quarantined</span>
+</div>
+<button class="w-full py-1.5 px-3 rounded bg-tertiary-container/30 border border-tertiary/50 text-tertiary font-body-sm text-xs font-semibold hover:bg-tertiary-container/50 transition-colors flex items-center justify-center gap-1 active:scale-95" id="btnReviewTempSpike" title="Open QA Triage">
+<span class="material-symbols-outlined text-xs" data-icon="policy">policy</span>
+              Review Temp Spike &amp; Quarantined Lot
+            </button>
+</div>
+<!-- Task Card 3: AP Clerk Invoice Discrepancy -->
+<div class="bg-surface-container-low rounded-lg p-3 border border-outline-variant/60 hover:border-secondary/50 transition-colors flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="receipt_long">receipt_long</span>
+<span class="font-headline-sm text-xs font-bold text-on-surface">AP Clerk Invoice Discrepancy</span>
+</div>
+<span class="font-label-code text-[10px] px-2 py-0.5 rounded bg-secondary-container/20 text-secondary border border-secondary/30">
+                3-Way Match Fallback
+              </span>
+</div>
+<p class="font-body-sm text-xs text-on-surface-variant">
+              Invoice <strong class="text-on-surface font-label-code">#INV-9921 ($4,920)</strong> vs PO-1001 ($4,850) — <strong class="text-tertiary font-label-code">+$70 delta</strong> requires manual bypass exception.
+            </p>
+<button class="w-full py-1.5 px-3 rounded bg-secondary-container/30 border border-secondary/40 text-secondary font-body-sm text-xs font-semibold hover:bg-secondary-container/50 transition-colors flex items-center justify-center gap-1 active:scale-95" id="btnReviewDiscrepancy" title="Review 3-Way Discrepancy">
+<span class="material-symbols-outlined text-xs" data-icon="balance">balance</span>
+              Review Match Discrepancy
+            </button>
+</div>
+</div>
+<!-- Footer link -->
+<div class="pt-2 border-t border-outline-variant/30 flex justify-between items-center text-on-surface-variant font-label-code text-[11px]">
+<span>Zeebe Tasklist API Sync: OK</span>
+<a class="inline-flex items-center gap-1 font-label-code text-xs text-primary hover:underline" href="#" id="navLinkTasklist">
+            Open Zeebe Tasklist <span class="material-symbols-outlined text-xs" data-icon="north_east">north_east</span>
+</a>
+</div>
+</div>
+</section>
+<!-- SECTION 3: ACTIVE REPLENISHMENT PIPELINE TABLE -->
+<section class="cockpit-panel rounded-xl p-space-lg flex flex-col gap-space-md">
+<!-- Title & Filters -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-outline-variant/40">
+<div>
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface">Active Replenishment Pipeline &amp; Workflow Instances</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Live end-to-end execution state across Zeebe orchestrator nodes</p>
+</div>
+<!-- Filter Tabs -->
+<div class="flex items-center gap-1 bg-surface-container p-1 rounded-lg border border-outline-variant/50 self-start sm:self-auto font-label-code text-xs">
+<button class="filter-tab px-3 py-1 rounded bg-primary text-on-primary font-semibold shadow-sm transition-colors" id="btnFilterAll">All (12)</button>
+<button class="filter-tab px-3 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors" id="btnFilterTransit">In-Transit (4)</button>
+<button class="filter-tab px-3 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors" id="btnFilterQA">Pending QA (2)</button>
+<button class="filter-tab px-3 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors" id="btnFilterSettlement">Settlement (3)</button>
+</div>
+</div>
+<!-- High-Density Data Grid -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant/60 font-label-code text-[11px] text-on-surface-variant uppercase tracking-wider">
+<th class="py-2.5 px-3">Request ID</th>
+<th class="py-2.5 px-3">Perishable Items</th>
+<th class="py-2.5 px-3">Assigned Supplier</th>
+<th class="py-2.5 px-3">Route Temp</th>
+<th class="py-2.5 px-3">SLA Status</th>
+<th class="py-2.5 px-3">Workflow Stage (BPMN State)</th>
+<th class="py-2.5 px-3 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30 font-body-sm text-xs">
+<!-- ROW 1 -->
+<tr class="hover:bg-white/[0.02] transition-colors group" id="tableRow_1">
+<td class="py-3 px-3 font-label-code font-bold text-on-surface">
+<span class="text-primary">REQ-1001</span>
+<span class="block text-[10px] text-on-surface-variant font-normal">Instance #92182</span>
+</td>
+<td class="py-3 px-3">
+<span class="text-on-surface font-medium">200x Milk 1L, 150x Yogurt</span>
+<span class="block text-on-surface-variant text-[11px]">Dairy Chill Grade A</span>
+</td>
+<td class="py-3 px-3 text-on-surface">Green Valley Dairy</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded font-label-code text-xs bg-primary/15 text-primary border border-primary/30">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                  4.2°C (Safe)
+                </span>
+</td>
+<td class="py-3 px-3">
+<div class="flex flex-col gap-1 w-32">
+<span class="font-label-code text-[11px] text-tertiary font-semibold">03m 42s remaining</span>
+<div class="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-3/4"></div>
+</div>
+</div>
+</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-secondary-container/20 text-secondary border border-secondary/30 font-label-code text-[11px]">
+<span class="material-symbols-outlined text-xs" data-icon="route">route</span>
+                  In-Transit Telemetry
+                </span>
+</td>
+<td class="py-3 px-3 text-right">
+<button class="px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/70 text-on-surface hover:text-primary hover:border-primary font-label-code text-xs transition-colors" id="btnViewDetailsRow_1">
+                  View Details
+                </button>
+</td>
+</tr>
+<!-- ROW 2 -->
+<tr class="hover:bg-white/[0.02] transition-colors group" id="tableRow_2">
+<td class="py-3 px-3 font-label-code font-bold text-on-surface">
+<span class="text-on-surface">REQ-1002</span>
+<span class="block text-[10px] text-on-surface-variant font-normal">Instance #92184</span>
+</td>
+<td class="py-3 px-3">
+<span class="text-on-surface font-medium">400x Organic Berries</span>
+<span class="block text-on-surface-variant text-[11px]">Strawberries / Blueberries</span>
+</td>
+<td class="py-3 px-3 text-on-surface">Hill Farms Organics</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded font-label-code text-xs bg-primary/15 text-primary border border-primary/30">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                  3.1°C (Safe)
+                </span>
+</td>
+<td class="py-3 px-3 font-label-code text-on-surface-variant">
+                On Schedule (ETA 18:30)
+              </td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container-high text-on-surface border border-outline-variant font-label-code text-[11px]">
+<span class="material-symbols-outlined text-xs text-primary" data-icon="send">send</span>
+                  Sequential PO Dispatched
+                </span>
+</td>
+<td class="py-3 px-3 text-right">
+<button class="px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/70 text-on-surface hover:text-primary hover:border-primary font-label-code text-xs transition-colors" id="btnViewDetailsRow_2">
+                  View Details
+                </button>
+</td>
+</tr>
+<!-- ROW 3 (EXCURSION TRIGGERED) -->
+<tr class="bg-error-container/10 hover:bg-error-container/20 transition-colors group border-l-2 border-l-error" id="tableRow_3">
+<td class="py-3 px-3 font-label-code font-bold text-error">
+<span>REQ-1003</span>
+<span class="block text-[10px] text-error/80 font-normal">Instance #92179</span>
+</td>
+<td class="py-3 px-3">
+<span class="text-on-surface font-medium">120x Artisanal Cheeses</span>
+<span class="block text-error text-[11px]">Quarantined Lot #LT-9021</span>
+</td>
+<td class="py-3 px-3 text-on-surface">Fresh Fields Dairy Co.</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded font-label-code text-xs bg-error-container/60 text-error border border-error/50 font-bold animate-pulse">
+<span class="material-symbols-outlined text-xs" data-icon="warning">warning</span>
+                  8.4°C (WARNING Excursion)
+                </span>
+</td>
+<td class="py-3 px-3 font-label-code text-error font-medium">
+                QA Review Required (Halted)
+              </td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-error-container/40 text-error border border-error/50 font-label-code text-[11px] font-semibold">
+<span class="material-symbols-outlined text-xs" data-icon="dangerous">dangerous</span>
+                  Temp Excursion Event Subprocess
+                </span>
+</td>
+<td class="py-3 px-3 text-right">
+<button class="px-2.5 py-1 rounded bg-error text-on-error font-label-code text-xs font-semibold hover:bg-error/90 transition-colors shadow" id="btnInspectNowRow_3">
+                  Inspect Now
+                </button>
+</td>
+</tr>
+<!-- ROW 4 -->
+<tr class="hover:bg-white/[0.02] transition-colors group" id="tableRow_4">
+<td class="py-3 px-3 font-label-code font-bold text-on-surface">
+<span class="text-on-surface">REQ-1004</span>
+<span class="block text-[10px] text-on-surface-variant font-normal">Instance #92160</span>
+</td>
+<td class="py-3 px-3">
+<span class="text-on-surface font-medium">300x Free-Range Eggs</span>
+<span class="block text-on-surface-variant text-[11px]">Cartons 12pk</span>
+</td>
+<td class="py-3 px-3 text-on-surface">Sunny Pastures Farm</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded font-label-code text-xs bg-primary/15 text-primary border border-primary/30">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                  5.0°C (Safe)
+                </span>
+</td>
+<td class="py-3 px-3 font-label-code text-primary font-medium">
+                Delivered - Dock 4
+              </td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-primary/15 text-primary border border-primary/30 font-label-code text-[11px]">
+<span class="material-symbols-outlined text-xs" data-icon="task_alt">task_alt</span>
+                  3-Way Match Completed
+                </span>
+</td>
+<td class="py-3 px-3 text-right">
+<button class="px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/70 text-on-surface hover:text-primary hover:border-primary font-label-code text-xs transition-colors" id="btnViewDetailsRow_4">
+                  View Details
+                </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination / System Status Bar -->
+<div class="pt-2 border-t border-outline-variant/40 flex flex-col sm:flex-row items-center justify-between text-on-surface-variant font-label-code text-xs gap-2">
+<div class="flex items-center gap-2">
+<span>Showing 4 of 12 active Zeebe workflow executions</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>Engine Cluster: <strong class="text-on-surface">camunda-cloud-prod-us-east</strong></span>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-1 rounded bg-surface-container border border-outline-variant hover:text-on-surface disabled:opacity-30" disabled="" id="btnPagePrev">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_left">chevron_left</span>
+</button>
+<span>Page 1 of 3</span>
+<button class="p-1 rounded bg-surface-container border border-outline-variant hover:text-on-surface active:scale-95" id="btnPageNext" title="Next Page">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- ==================== FOOTER ==================== -->
+<footer class="w-full border-t border-outline-variant/40 bg-surface-container-lowest py-3 px-margin-desktop text-on-surface-variant font-label-code text-xs flex flex-col sm:flex-row items-center justify-between gap-2 mt-auto">
+<div class="flex items-center gap-3">
+<span class="text-primary font-bold">ColdChain Sync</span>
+<span>•</span>
+<span>Camunda 8 Zeebe Orchestration Layer</span>
+<span>•</span>
+<span>ISO-22000 &amp; HACCP Compliant Cold Chain Gateway</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1 text-primary">
+<span class="w-1.5 h-1.5 rounded-full bg-primary status-beacon-green"></span>
+        gRPC Telemetry Ingestion Active
+      </span>
+<span>v8.4.2-enterprise</span>
+</div>
+</footer>
+<!-- Interactive JavaScript for Live Incident Simulation & Micro-Interactions -->
+<script>
+    // Live Clock UTC updater
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getUTCHours()).padStart(2, '0');
+      const m = String(now.getUTCMinutes()).padStart(2, '0');
+      const s = String(now.getUTCSeconds()).padStart(2, '0');
+      const clockEl = document.getElementById('clock-utc');
+      if (clockEl) clockEl.textContent = `${h}:${m}:${s} UTC`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Incident Simulation Trigger
+    const simulateBtn = document.getElementById('simulateIncidentBtn');
+    const triggerSpikeBtn = document.getElementById('triggerSpikeBtn');
+    const alertBanner = document.getElementById('excursionAlertBanner');
+    const dismissAlertBtn = document.getElementById('dismissAlertBtn');
+    const liveTemp = document.getElementById('live-temp-display');
+
+    function fireIncident() {
+      if (alertBanner) {
+        alertBanner.classList.remove('hidden');
+      }
+      if (liveTemp) {
+        liveTemp.textContent = '8.4°C';
+        liveTemp.classList.remove('text-primary');
+        liveTemp.classList.add('text-error', 'animate-pulse');
+      }
+    }
+
+    if (simulateBtn) simulateBtn.addEventListener('click', fireIncident);
+    if (triggerSpikeBtn) triggerSpikeBtn.addEventListener('click', fireIncident);
+
+    if (dismissAlertBtn) {
+      dismissAlertBtn.addEventListener('click', () => {
+        if (alertBanner) alertBanner.classList.add('hidden');
+        if (liveTemp) {
+          liveTemp.textContent = '4.2°C';
+          liveTemp.classList.remove('text-error', 'animate-pulse');
+          liveTemp.classList.add('text-primary');
+        }
+      });
+    }
+
+    // SLA Countdown Simulation (03:42 down)
+    let totalSeconds = 3 * 60 + 42;
+    const slaTimerEl = document.getElementById('sla-timer');
+    setInterval(() => {
+      if (totalSeconds > 0) {
+        totalSeconds--;
+        const mins = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+        const secs = String(totalSeconds % 60).padStart(2, '0');
+        if (slaTimerEl) slaTimerEl.textContent = `${mins}:${secs}`;
+      }
+    }, 1000);
+  </script>
+
+<!-- Notification Dropdown Menu -->
+<div id="dropdownNotifications" class="hidden absolute top-16 right-16 w-96 rounded-xl bg-surface-container-high border border-outline-variant shadow-2xl z-50 p-4">
+  <div class="flex items-center justify-between pb-3 border-b border-outline-variant">
+    <div class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-primary text-[20px]">notifications_active</span>
+      <h4 class="font-headline-sm text-sm font-semibold text-on-surface">Camunda Engine Alerts</h4>
+    </div>
+    <span class="px-2 py-0.5 rounded text-[10px] font-label-code bg-primary/20 text-primary font-bold">3 Unread</span>
+  </div>
+  <div class="divide-y divide-outline-variant/40 max-h-72 overflow-y-auto">
+    <div class="py-2.5 flex items-start gap-2.5 hover:bg-surface-container/50 p-1.5 rounded transition-colors cursor-pointer" onclick="window.location.href='qa-triage.html'">
+      <span class="material-symbols-outlined text-error text-[18px] mt-0.5">warning</span>
+      <div class="flex-1">
+        <p class="text-xs font-semibold text-on-surface">Temperature Excursion: SHP-405</p>
+        <p class="text-[11px] text-on-surface-variant">Core temp hit 8.7°C (> 8.0°C limit). Non-interrupting Event Sub-Process active.</p>
+        <span class="text-[10px] font-label-code text-on-surface-variant/70">2 mins ago • Zeebe Broker</span>
+      </div>
+    </div>
+    <div class="py-2.5 flex items-start gap-2.5 hover:bg-surface-container/50 p-1.5 rounded transition-colors cursor-pointer" onclick="openRFQModal()">
+      <span class="material-symbols-outlined text-secondary text-[18px] mt-0.5">request_quote</span>
+      <div class="flex-1">
+        <p class="text-xs font-semibold text-on-surface">RFQ Quotations Received</p>
+        <p class="text-[11px] text-on-surface-variant">Green Valley Dairy awarded $3,200 via FEEL ranking algorithm.</p>
+        <span class="text-[10px] font-label-code text-on-surface-variant/70">18 mins ago • MI Subprocess</span>
+      </div>
+    </div>
+    <div class="py-2.5 flex items-start gap-2.5 hover:bg-surface-container/50 p-1.5 rounded transition-colors cursor-pointer" onclick="openDiscrepancyModal()">
+      <span class="material-symbols-outlined text-tertiary text-[18px] mt-0.5">balance</span>
+      <div class="flex-1">
+        <p class="text-xs font-semibold text-on-surface">3-Way Match Exception: INV-9921</p>
+        <p class="text-[11px] text-on-surface-variant">Invoice ($4,920) has $70 freight variance vs PO ($4,850).</p>
+        <span class="text-[10px] font-label-code text-on-surface-variant/70">42 mins ago • Call Activity</span>
+      </div>
+    </div>
+  </div>
+  <div class="pt-3 border-t border-outline-variant flex justify-between items-center text-xs">
+    <button id="btnClearNotifs" class="text-on-surface-variant hover:text-on-surface font-label-code text-[11px]">Clear all</button>
+    <button id="btnMarkReadNotifs" class="text-primary hover:underline font-label-code text-[11px]">Mark as read</button>
+  </div>
+</div>
+
+<!-- Settings & SLA Thresholds Drawer -->
+<div id="drawerSettings" class="hidden fixed inset-y-0 right-0 w-96 bg-surface-container-high border-l border-outline-variant shadow-2xl z-50 p-6 flex flex-col justify-between">
+  <div>
+    <div class="flex items-center justify-between pb-4 border-b border-outline-variant">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">tune</span>
+        <h3 class="font-headline-sm text-base font-bold text-on-surface">Engine & Thresholds</h3>
+      </div>
+      <button id="btnCloseSettings" class="p-1 rounded text-on-surface-variant hover:text-on-surface">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    
+    <div class="space-y-6 mt-6">
+      <div>
+        <label class="block font-label-code text-xs text-on-surface-variant mb-1">Max Permissible Temp SLA (°C)</label>
+        <div class="flex items-center gap-3">
+          <input type="range" id="inputMaxTemp" min="2" max="12" step="0.5" value="8.0" class="w-full accent-primary">
+          <span id="labelMaxTemp" class="font-label-code text-sm font-bold text-primary w-12 text-right">8.0°C</span>
+        </div>
+        <p class="text-[11px] text-on-surface-variant/80 mt-1">Breach triggers Camunda Message: TempExcursionDetected</p>
+      </div>
+
+      <div>
+        <label class="block font-label-code text-xs text-on-surface-variant mb-1">Delivery SLA Timer (minutes)</label>
+        <div class="flex items-center gap-3">
+          <input type="range" id="inputSlaMins" min="1" max="15" step="1" value="5" class="w-full accent-primary">
+          <span id="labelSlaMins" class="font-label-code text-sm font-bold text-primary w-12 text-right">5 mins</span>
+        </div>
+        <p class="text-[11px] text-on-surface-variant/80 mt-1">BPMN Boundary Timer Event: PT5M</p>
+      </div>
+
+      <div>
+        <label class="block font-label-code text-xs text-on-surface-variant mb-2">Workflow Execution Mode</label>
+        <select id="selectEngineMode" class="w-full bg-surface-container border border-outline-variant rounded p-2 text-xs font-label-code text-on-surface">
+          <option value="simulated">Simulated Zeebe Engine (Local Run)</option>
+          <option value="cloud">Camunda 8 SaaS Cluster (gRPC)</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block font-label-code text-xs text-on-surface-variant mb-2">Simulated Store Location</label>
+        <select id="selectStoreLocation" class="w-full bg-surface-container border border-outline-variant rounded p-2 text-xs font-label-code text-on-surface">
+          <option value="STORE-12">Store #12 - Metro Fresh Hypermarket</option>
+          <option value="STORE-08">Store #08 - Downtown Organics</option>
+          <option value="STORE-24">Store #24 - Westside Cold Depot</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="pt-4 border-t border-outline-variant">
+    <button id="btnSaveSettings" class="w-full py-2 bg-primary text-on-primary font-body-sm font-semibold rounded hover:bg-primary-fixed transition-colors active:scale-95">Save & Apply Parameters</button>
+  </div>
+</div>
+
+<!-- Modal: New Manual Replenishment Request -->
+<div id="modalNewReplenishment" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  <div class="bg-surface-container-high border border-outline-variant rounded-2xl w-full max-w-lg p-6 shadow-2xl relative">
+    <div class="flex items-center justify-between pb-3 border-b border-outline-variant">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary text-[24px]">add_circle</span>
+        <h3 class="font-headline-sm text-lg font-bold text-on-surface">New Replenishment Request</h3>
+      </div>
+      <button id="btnCloseNewModal" class="p-1 rounded text-on-surface-variant hover:text-on-surface">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <form id="formNewReplenishment" class="space-y-4 mt-4">
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block font-label-code text-xs text-on-surface-variant mb-1">Request ID</label>
+          <input type="text" id="newRequestId" value="REQ-1005" readonly class="w-full bg-surface-container border border-outline-variant rounded p-2 text-xs font-label-code text-primary font-bold">
+        </div>
+        <div>
+          <label class="block font-label-code text-xs text-on-surface-variant mb-1">Store ID</label>
+          <input type="text" id="newStoreId" value="STORE-12" class="w-full bg-surface-container border border-outline-variant rounded p-2 text-xs font-label-code text-on-surface">
+        </div>
+      </div>
+
+      <div>
+        <label class="block font-label-code text-xs text-on-surface-variant mb-1">Store Manager Email</label>
+        <input type="email" id="newManagerEmail" value="manager.metro@store.example" class="w-full bg-surface-container border border-outline-variant rounded p-2 text-xs text-on-surface">
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block font-label-code text-xs text-on-surface-variant mb-1">Item 1 (Dairy)</label>
+          <select id="newItem1" class="w-full bg-surface-container border border-outline-variant rounded p-2 text-xs text-on-surface font-label-code">
+            <option value="MILK-1L:250">Milk 1L Whole (250 units)</option>
+            <option value="YOGURT-500G:180">Greek Yogurt 500g (180 units)</option>
+            <option value="BUTTER-250G:100">Salted Butter 250g (100 units)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-label-code text-xs text-on-surface-variant mb-1">Item 2 (Produce)</label>
+          <select id="newItem2" class="w-full bg-surface-container border border-outline-variant rounded p-2 text-xs text-on-surface font-label-code">
+            <option value="BERRIES-ORG:300">Organic Berries (300 packs)</option>
+            <option value="CHEESE-CHED:120">Artisan Cheddar (120 wheels)</option>
+            <option value="EGGS-FREE:400">Free-Range Eggs (400 cartons)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block font-label-code text-xs text-on-surface-variant mb-1">Max Transit Temp (°C)</label>
+          <input type="number" id="newMaxTemp" value="8" min="2" max="10" class="w-full bg-surface-container border border-outline-variant rounded p-2 text-xs font-label-code text-on-surface">
+        </div>
+        <div>
+          <label class="block font-label-code text-xs text-on-surface-variant mb-1">Allocated Budget Cap ($)</label>
+          <input type="number" id="newBudgetCap" value="5000" min="1000" max="25000" class="w-full bg-surface-container border border-outline-variant rounded p-2 text-xs font-label-code text-on-surface">
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-outline-variant flex gap-3 justify-end">
+        <button type="button" id="btnCancelNewModal" class="px-4 py-2 rounded bg-surface-container-high border border-outline-variant text-on-surface text-xs hover:bg-surface-bright">Cancel</button>
+        <button type="submit" id="btnSubmitNewReplenishment" class="px-4 py-2 rounded bg-primary text-on-primary font-semibold text-xs hover:bg-primary-fixed flex items-center gap-1.5 shadow-sm active:scale-95">
+          <span class="material-symbols-outlined text-[16px]">rocket_launch</span>
+          <span>Start Camunda 8 Instance</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: Telemetry Stream Log -->
+<div id="modalTelemetryLog" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  <div class="bg-surface-container-high border border-outline-variant rounded-2xl w-full max-w-2xl p-6 shadow-2xl relative">
+    <div class="flex items-center justify-between pb-3 border-b border-outline-variant">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-secondary text-[24px]">terminal</span>
+        <h3 class="font-headline-sm text-lg font-bold text-on-surface">Live IoT Telemetry Log — Truck #TK-882</h3>
+      </div>
+      <button id="btnCloseTelemetryModal" class="p-1 rounded text-on-surface-variant hover:text-on-surface">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div class="my-4 grid grid-cols-4 gap-2 text-center">
+      <div class="bg-surface-container p-2 rounded border border-outline-variant">
+        <p class="text-[10px] font-label-code text-on-surface-variant">CURRENT TEMP</p>
+        <p class="text-sm font-bold text-primary font-label-code">4.2°C</p>
+      </div>
+      <div class="bg-surface-container p-2 rounded border border-outline-variant">
+        <p class="text-[10px] font-label-code text-on-surface-variant">MAX RECORDED</p>
+        <p class="text-sm font-bold text-on-surface font-label-code">5.4°C</p>
+      </div>
+      <div class="bg-surface-container p-2 rounded border border-outline-variant">
+        <p class="text-[10px] font-label-code text-on-surface-variant">HUMIDITY</p>
+        <p class="text-sm font-bold text-secondary font-label-code">88% RH</p>
+      </div>
+      <div class="bg-surface-container p-2 rounded border border-outline-variant">
+        <p class="text-[10px] font-label-code text-on-surface-variant">BATTERY PACK</p>
+        <p class="text-sm font-bold text-primary font-label-code">96%</p>
+      </div>
+    </div>
+
+    <div class="bg-surface-container rounded-lg border border-outline-variant overflow-hidden max-h-60 overflow-y-auto">
+      <table class="w-full text-left text-xs font-label-code">
+        <thead class="bg-surface-container-highest text-on-surface-variant">
+          <tr>
+            <th class="p-2">Timestamp (UTC)</th>
+            <th class="p-2">Core Temp</th>
+            <th class="p-2">Humidity</th>
+            <th class="p-2">Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-outline-variant/30 text-on-surface">
+          <tr><td class="p-2 text-on-surface-variant">15:58:12</td><td class="p-2 text-primary font-bold">4.2°C</td><td class="p-2">88%</td><td class="p-2 text-primary">NORMAL</td></tr>
+          <tr><td class="p-2 text-on-surface-variant">15:45:00</td><td class="p-2 text-primary font-bold">4.1°C</td><td class="p-2">87%</td><td class="p-2 text-primary">NORMAL</td></tr>
+          <tr><td class="p-2 text-on-surface-variant">15:30:00</td><td class="p-2 text-primary font-bold">3.9°C</td><td class="p-2">86%</td><td class="p-2 text-primary">NORMAL</td></tr>
+          <tr><td class="p-2 text-on-surface-variant">15:15:00</td><td class="p-2 text-primary font-bold">4.4°C</td><td class="p-2">87%</td><td class="p-2 text-primary">NORMAL</td></tr>
+          <tr><td class="p-2 text-on-surface-variant">15:00:00</td><td class="p-2 text-primary font-bold">5.4°C</td><td class="p-2">84%</td><td class="p-2 text-primary">NORMAL</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pt-4 border-t border-outline-variant flex justify-between items-center mt-4">
+      <div class="flex gap-2">
+        <button id="btnDownloadJsonTelemetry" class="px-3 py-1.5 rounded bg-surface-container border border-outline-variant text-xs font-label-code hover:text-primary flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px]">download</span> Export JSON
+        </button>
+        <button id="btnDownloadCsvTelemetry" class="px-3 py-1.5 rounded bg-surface-container border border-outline-variant text-xs font-label-code hover:text-primary flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px]">table_view</span> Export CSV
+        </button>
+      </div>
+      <button id="btnCloseTelemetryModal2" class="px-4 py-1.5 rounded bg-surface-container-high border border-outline-variant text-on-surface text-xs hover:bg-surface-bright">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Supplier RFQ & Ranking Matrix -->
+<div id="modalRFQ" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  <div class="bg-surface-container-high border border-outline-variant rounded-2xl w-full max-w-xl p-6 shadow-2xl relative">
+    <div class="flex items-center justify-between pb-3 border-b border-outline-variant">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-secondary text-[24px]">request_quote</span>
+        <h3 class="font-headline-sm text-lg font-bold text-on-surface">Supplier RFQ Comparison & FEEL Ranking</h3>
+      </div>
+      <button id="btnCloseRFQModal" class="p-1 rounded text-on-surface-variant hover:text-on-surface">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div class="mt-4 space-y-3">
+      <div class="p-3 rounded-lg bg-surface-container border border-primary/40 flex items-center justify-between">
+        <div>
+          <span class="px-2 py-0.5 rounded bg-primary/20 text-primary font-label-code text-[10px] font-bold">RANK 1 (SELECTED)</span>
+          <h4 class="font-bold text-sm text-on-surface mt-1">Green Valley Dairy (SUP-A)</h4>
+          <p class="text-xs text-on-surface-variant">200x Milk 1L @ $8.00 • 150x Yogurt @ $10.66</p>
+        </div>
+        <div class="text-right">
+          <p class="text-base font-bold text-primary font-label-code">$3,200.00</p>
+          <span class="text-[10px] font-label-code text-on-surface-variant">PO-REQ-1001-SUP-A</span>
+        </div>
+      </div>
+
+      <div class="p-3 rounded-lg bg-surface-container border border-outline-variant flex items-center justify-between opacity-80">
+        <div>
+          <span class="px-2 py-0.5 rounded bg-surface-container-highest text-on-surface-variant font-label-code text-[10px]">RANK 2 (RESERVE)</span>
+          <h4 class="font-semibold text-sm text-on-surface mt-1">Hill Farms (SUP-B)</h4>
+          <p class="text-xs text-on-surface-variant">Higher freight rate • 200x Milk + 150x Yogurt</p>
+        </div>
+        <div class="text-right">
+          <p class="text-base font-bold text-on-surface font-label-code">$3,600.00</p>
+          <span class="text-[10px] font-label-code text-on-surface-variant">Quote Received</span>
+        </div>
+      </div>
+
+      <div class="p-3 rounded-lg bg-surface-container border border-outline-variant flex items-center justify-between opacity-80">
+        <div>
+          <span class="px-2 py-0.5 rounded bg-surface-container-highest text-on-surface-variant font-label-code text-[10px]">RANK 3 (EXCEEDED)</span>
+          <h4 class="font-semibold text-sm text-on-surface mt-1">Fresh Fields Dairy (SUP-C)</h4>
+          <p class="text-xs text-on-surface-variant">Premium batch surcharge</p>
+        </div>
+        <div class="text-right">
+          <p class="text-base font-bold text-on-surface font-label-code">$4,100.00</p>
+          <span class="text-[10px] font-label-code text-on-surface-variant">Quote Received</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pt-4 border-t border-outline-variant flex justify-between items-center mt-4">
+      <span class="text-xs font-label-code text-on-surface-variant">FEEL Expression: <code class="text-primary">sort(quotes, function(x, y) x.price &lt; y.price)</code></span>
+      <button id="btnCloseRFQModal2" class="px-4 py-1.5 rounded bg-primary text-on-primary font-semibold text-xs hover:bg-primary-fixed">Got it</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: 3-Way Match Discrepancy Review -->
+<div id="modalDiscrepancy" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  <div class="bg-surface-container-high border border-outline-variant rounded-2xl w-full max-w-xl p-6 shadow-2xl relative">
+    <div class="flex items-center justify-between pb-3 border-b border-outline-variant">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-tertiary text-[24px]">balance</span>
+        <h3 class="font-headline-sm text-lg font-bold text-on-surface">3-Way Match Exception Review</h3>
+      </div>
+      <button id="btnCloseDiscrepancyModal" class="p-1 rounded text-on-surface-variant hover:text-on-surface">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div class="mt-4 grid grid-cols-3 gap-2 text-center">
+      <div class="bg-surface-container p-2.5 rounded border border-outline-variant">
+        <p class="text-[10px] font-label-code text-on-surface-variant">1. PURCHASE ORDER</p>
+        <p class="text-sm font-bold text-on-surface font-label-code mt-1">$4,850.00</p>
+        <span class="text-[10px] text-primary">PO-1001 • 350 Units</span>
+      </div>
+      <div class="bg-surface-container p-2.5 rounded border border-outline-variant">
+        <p class="text-[10px] font-label-code text-on-surface-variant">2. GOODS RECEIPT</p>
+        <p class="text-sm font-bold text-on-surface font-label-code mt-1">350 Recv'd</p>
+        <span class="text-[10px] text-primary">GR-9921 • Dock 4 Pass</span>
+      </div>
+      <div class="bg-surface-container p-2.5 rounded border border-tertiary/60">
+        <p class="text-[10px] font-label-code text-tertiary">3. INVOICE AMOUNT</p>
+        <p class="text-sm font-bold text-tertiary font-label-code mt-1">$4,920.00</p>
+        <span class="text-[10px] text-error font-semibold">+$70.00 Variance</span>
+      </div>
+    </div>
+
+    <div class="mt-4 p-3 rounded bg-surface-container border border-outline-variant text-xs">
+      <p class="font-semibold text-on-surface mb-1">Discrepancy Rationale from Supplier:</p>
+      <p class="text-on-surface-variant">Fuel surcharge of $70 applied due to emergency refrigerated re-routing during transit. Under store tolerance limit of $100.</p>
+    </div>
+
+    <div class="pt-4 border-t border-outline-variant flex gap-2 justify-end mt-4">
+      <button id="btnDisputeInvoice" class="px-3 py-1.5 rounded bg-surface-container border border-error/50 text-error text-xs hover:bg-error/10 font-semibold">Dispute & Return</button>
+      <button id="btnApproveDiscrepancy" class="px-4 py-1.5 rounded bg-primary text-on-primary font-semibold text-xs hover:bg-primary-fixed shadow-sm active:scale-95 flex items-center gap-1">
+        <span class="material-symbols-outlined text-[16px]">check_circle</span>
+        <span>Approve Exception & Release Payment</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Generic Shipment Details -->
+<div id="modalShipmentDetails" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  <div class="bg-surface-container-high border border-outline-variant rounded-2xl w-full max-w-lg p-6 shadow-2xl relative">
+    <div class="flex items-center justify-between pb-3 border-b border-outline-variant">
+      <h3 id="shipmentModalTitle" class="font-headline-sm text-lg font-bold text-on-surface">Shipment Details</h3>
+      <button id="btnCloseShipmentModal" class="p-1 rounded text-on-surface-variant hover:text-on-surface">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div id="shipmentModalBody" class="mt-4 space-y-3 text-xs font-label-code text-on-surface">
+      <!-- Injected dynamically -->
+    </div>
+    <div class="pt-4 border-t border-outline-variant flex justify-end mt-4">
+      <button id="btnCloseShipmentModal2" class="px-4 py-1.5 rounded bg-surface-container border border-outline-variant text-on-surface text-xs hover:bg-surface-bright">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Floating Toast Notification System -->
+<div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+
+<script>
+  // Universal Audio Synthesizer (Web Audio API)
+  function playAudioChime(type) {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      const now = ctx.currentTime;
+      
+      if (type === 'success') {
+        osc.frequency.setValueAtTime(523.25, now); // C5
+        osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.1); // E5
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+        osc.start(now);
+        osc.stop(now + 0.3);
+      } else if (type === 'warning') {
+        osc.frequency.setValueAtTime(440, now); // A4
+        osc.frequency.setValueAtTime(349.23, now + 0.15); // F4
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+        osc.start(now);
+        osc.stop(now + 0.35);
+      } else {
+        osc.frequency.setValueAtTime(600, now);
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+        osc.start(now);
+        osc.stop(now + 0.15);
+      }
+    } catch(e) {}
+  }
+
+  // Universal Toast Notification
+  function showToast(title, message, type = 'success') {
+    playAudioChime(type);
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = `pointer-events-auto flex items-start gap-3 p-3.5 rounded-xl border shadow-xl transition-all duration-300 transform translate-y-2 opacity-0 text-xs ${
+      type === 'error' ? 'bg-error-container/90 border-error/50 text-error' :
+      type === 'warning' ? 'bg-tertiary-container/90 border-tertiary/50 text-tertiary' :
+      'bg-surface-container-high border-primary/40 text-on-surface'
+    }`;
+
+    const iconName = type === 'error' ? 'report' : type === 'warning' ? 'warning' : 'check_circle';
+    const iconColor = type === 'error' ? 'text-error' : type === 'warning' ? 'text-tertiary' : 'text-primary';
+
+    toast.innerHTML = `
+      <span class="material-symbols-outlined ${iconColor} text-[20px] mt-0.5">${iconName}</span>
+      <div class="flex-1">
+        <p class="font-bold font-body-sm">${title}</p>
+        <p class="text-on-surface-variant text-[11px] mt-0.5">${message}</p>
+      </div>
+      <button class="text-on-surface-variant hover:text-on-surface p-1" onclick="this.parentElement.remove()">
+        <span class="material-symbols-outlined text-[16px]">close</span>
+      </button>
+    `;
+
+    container.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.remove('translate-y-2', 'opacity-0');
+    }, 10);
+
+    setTimeout(() => {
+      toast.classList.add('opacity-0', 'translate-y-2');
+      setTimeout(() => toast.remove(), 300);
+    }, 4500);
+  }
+
+  // 1. Notification Dropdown Toggle
+  const btnNotifs = document.getElementById('btnNotifications');
+  const dropdownNotifs = document.getElementById('dropdownNotifications');
+  if (btnNotifs && dropdownNotifs) {
+    btnNotifs.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdownNotifs.classList.toggle('hidden');
+    });
+    document.addEventListener('click', (e) => {
+      if (!dropdownNotifs.contains(e.target) && e.target !== btnNotifs) {
+        dropdownNotifs.classList.add('hidden');
+      }
+    });
+  }
+
+  const btnClearNotifs = document.getElementById('btnClearNotifs');
+  const btnMarkReadNotifs = document.getElementById('btnMarkReadNotifs');
+  if (btnClearNotifs) {
+    btnClearNotifs.addEventListener('click', () => {
+      showToast('Notifications Cleared', 'All active event alerts have been dismissed.', 'info');
+      if (dropdownNotifs) dropdownNotifs.classList.add('hidden');
+    });
+  }
+  if (btnMarkReadNotifs) {
+    btnMarkReadNotifs.addEventListener('click', () => {
+      showToast('Marked as Read', 'Alert counters have been reset.', 'success');
+      if (dropdownNotifs) dropdownNotifs.classList.add('hidden');
+    });
+  }
+
+  // 2. Settings Drawer Toggle
+  const btnTune = document.getElementById('btnTuneSettings');
+  const drawerSettings = document.getElementById('drawerSettings');
+  const btnCloseSettings = document.getElementById('btnCloseSettings');
+  const btnSaveSettings = document.getElementById('btnSaveSettings');
+  const inputMaxTemp = document.getElementById('inputMaxTemp');
+  const labelMaxTemp = document.getElementById('labelMaxTemp');
+  const inputSlaMins = document.getElementById('inputSlaMins');
+  const labelSlaMins = document.getElementById('labelSlaMins');
+
+  if (inputMaxTemp && labelMaxTemp) {
+    inputMaxTemp.addEventListener('input', () => {
+      labelMaxTemp.textContent = `${inputMaxTemp.value}°C`;
+    });
+  }
+  if (inputSlaMins && labelSlaMins) {
+    inputSlaMins.addEventListener('input', () => {
+      labelSlaMins.textContent = `${inputSlaMins.value} mins`;
+    });
+  }
+
+  if (btnTune && drawerSettings) {
+    btnTune.addEventListener('click', () => drawerSettings.classList.remove('hidden'));
+  }
+  if (btnCloseSettings && drawerSettings) {
+    btnCloseSettings.addEventListener('click', () => drawerSettings.classList.add('hidden'));
+  }
+  if (btnSaveSettings && drawerSettings) {
+    btnSaveSettings.addEventListener('click', () => {
+      drawerSettings.classList.add('hidden');
+      showToast('Settings Saved', `Max Permissible Temp SLA set to ${inputMaxTemp.value}°C. Engine updated.`, 'success');
+    });
+  }
+
+  // 3. New Manual Replenishment Modal
+  const btnNewRepl = document.getElementById('btnNewReplenishment');
+  const modalNewRepl = document.getElementById('modalNewReplenishment');
+  const btnCloseNewModal = document.getElementById('btnCloseNewModal');
+  const btnCancelNewModal = document.getElementById('btnCancelNewModal');
+  const formNewRepl = document.getElementById('formNewReplenishment');
+
+  function openNewReplModal() {
+    if (modalNewRepl) modalNewRepl.classList.remove('hidden');
+  }
+  function closeNewReplModal() {
+    if (modalNewRepl) modalNewRepl.classList.add('hidden');
+  }
+  if (btnNewRepl) btnNewRepl.addEventListener('click', openNewReplModal);
+  if (btnCloseNewModal) btnCloseNewModal.addEventListener('click', closeNewReplModal);
+  if (btnCancelNewModal) btnCancelNewModal.addEventListener('click', closeNewReplModal);
+
+  if (formNewRepl) {
+    formNewRepl.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const reqId = document.getElementById('newRequestId').value;
+      const storeId = document.getElementById('newStoreId').value;
+      closeNewReplModal();
+
+      // Add row to table
+      const tbody = document.querySelector('tbody');
+      if (tbody) {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-surface-container-high/30 transition-colors bg-primary/5';
+        tr.innerHTML = `
+          <td class="p-3 font-semibold text-primary font-label-code">${reqId}</td>
+          <td class="p-3 text-on-surface">250x Milk 1L, 300x Berries</td>
+          <td class="p-3 text-on-surface font-label-code">Green Valley Dairy</td>
+          <td class="p-3"><span class="px-2 py-0.5 rounded text-[11px] font-label-code bg-primary/10 text-primary border border-primary/30 font-semibold">3.6°C (Optimal)</span></td>
+          <td class="p-3 font-label-code text-on-surface-variant">04m 58s remaining</td>
+          <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-label-code bg-primary/20 text-primary font-bold">RFQ Dispatched</span></td>
+          <td class="p-3"><button class="px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/70 text-on-surface hover:text-primary font-label-code text-xs" onclick="openShipmentDetails('${reqId}', 'Green Valley Dairy', 'RFQ Dispatched', '3.6°C')">View Details</button></td>
+        `;
+        tbody.insertBefore(tr, tbody.firstChild);
+      }
+
+      showToast('Process Instance Created', `Zeebe Process Instance ${reqId} started for ${storeId}. RFQ broadcast dispatched.`, 'success');
+    });
+  }
+
+  // 4. Telemetry Modal
+  const btnOpenTelemetry = document.getElementById('btnOpenTelemetryLog');
+  const modalTelemetry = document.getElementById('modalTelemetryLog');
+  const btnCloseTelemetryModal = document.getElementById('btnCloseTelemetryModal');
+  const btnCloseTelemetryModal2 = document.getElementById('btnCloseTelemetryModal2');
+  const btnDownloadJson = document.getElementById('btnDownloadJsonTelemetry');
+  const btnDownloadCsv = document.getElementById('btnDownloadCsvTelemetry');
+
+  function openTelemetryModal() {
+    if (modalTelemetry) modalTelemetry.classList.remove('hidden');
+  }
+  function closeTelemetryModal() {
+    if (modalTelemetry) modalTelemetry.classList.add('hidden');
+  }
+  if (btnOpenTelemetry) btnOpenTelemetry.addEventListener('click', openTelemetryModal);
+  if (btnCloseTelemetryModal) btnCloseTelemetryModal.addEventListener('click', closeTelemetryModal);
+  if (btnCloseTelemetryModal2) btnCloseTelemetryModal2.addEventListener('click', closeTelemetryModal);
+
+  if (btnDownloadJson) {
+    btnDownloadJson.addEventListener('click', () => {
+      const data = {
+        truckId: "TK-882",
+        carrier: "Apex Cold Logistics",
+        readings: [
+          { time: "15:58:12 UTC", tempC: 4.2, humidityPct: 88, status: "NORMAL" },
+          { time: "15:45:00 UTC", tempC: 4.1, humidityPct: 87, status: "NORMAL" },
+          { time: "15:30:00 UTC", tempC: 3.9, humidityPct: 86, status: "NORMAL" }
+        ]
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'telemetry-TK882.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Telemetry Exported', 'Downloaded telemetry-TK882.json', 'success');
+    });
+  }
+
+  if (btnDownloadCsv) {
+    btnDownloadCsv.addEventListener('click', () => {
+      const csv = "Timestamp,CoreTempC,HumidityPct,Status\n15:58:12,4.2,88,NORMAL\n15:45:00,4.1,87,NORMAL\n15:30:00,3.9,86,NORMAL";
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'telemetry-TK882.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('CSV Exported', 'Downloaded telemetry-TK882.csv', 'success');
+    });
+  }
+
+  // 5. RFQ Modal
+  const modalRFQ = document.getElementById('modalRFQ');
+  const btnCloseRFQModal = document.getElementById('btnCloseRFQModal');
+  const btnCloseRFQModal2 = document.getElementById('btnCloseRFQModal2');
+  const navLinkRFQ = document.getElementById('navLinkRFQ');
+
+  function openRFQModal() {
+    if (modalRFQ) modalRFQ.classList.remove('hidden');
+  }
+  function closeRFQModal() {
+    if (modalRFQ) modalRFQ.classList.add('hidden');
+  }
+  if (navLinkRFQ) navLinkRFQ.addEventListener('click', (e) => { e.preventDefault(); openRFQModal(); });
+  if (btnCloseRFQModal) btnCloseRFQModal.addEventListener('click', closeRFQModal);
+  if (btnCloseRFQModal2) btnCloseRFQModal2.addEventListener('click', closeRFQModal);
+
+  // 6. 3-Way Match Discrepancy Modal
+  const btnReviewDiscrepancy = document.getElementById('btnReviewDiscrepancy');
+  const modalDiscrepancy = document.getElementById('modalDiscrepancy');
+  const btnCloseDiscrepancyModal = document.getElementById('btnCloseDiscrepancyModal');
+  const btnApproveDiscrepancy = document.getElementById('btnApproveDiscrepancy');
+  const btnDisputeInvoice = document.getElementById('btnDisputeInvoice');
+  const navLinkSettlements = document.getElementById('navLinkSettlements');
+
+  function openDiscrepancyModal() {
+    if (modalDiscrepancy) modalDiscrepancy.classList.remove('hidden');
+  }
+  function closeDiscrepancyModal() {
+    if (modalDiscrepancy) modalDiscrepancy.classList.add('hidden');
+  }
+  if (btnReviewDiscrepancy) btnReviewDiscrepancy.addEventListener('click', openDiscrepancyModal);
+  if (navLinkSettlements) navLinkSettlements.addEventListener('click', (e) => { e.preventDefault(); openDiscrepancyModal(); });
+  if (btnCloseDiscrepancyModal) btnCloseDiscrepancyModal.addEventListener('click', closeDiscrepancyModal);
+
+  if (btnApproveDiscrepancy) {
+    btnApproveDiscrepancy.addEventListener('click', () => {
+      closeDiscrepancyModal();
+      if (btnReviewDiscrepancy) {
+        btnReviewDiscrepancy.disabled = true;
+        btnReviewDiscrepancy.textContent = 'Exception Approved & Settled';
+        btnReviewDiscrepancy.classList.remove('bg-secondary-container/30', 'text-secondary');
+        btnReviewDiscrepancy.classList.add('bg-primary/20', 'text-primary', 'border-primary/40');
+      }
+      showToast('Discrepancy Approved', 'AP Clerk approved $70 variance bypass. Call Activity completed successfully.', 'success');
+    });
+  }
+
+  if (btnDisputeInvoice) {
+    btnDisputeInvoice.addEventListener('click', () => {
+      closeDiscrepancyModal();
+      showToast('Invoice Disputed', 'Notice dispatched via SMTP connector to supplier accounts department.', 'warning');
+    });
+  }
+
+  // 7. Camunda Task Approval & Rejection
+  const btnApproveBatch = document.getElementById('btnApproveBatch');
+  const btnRejectModify = document.getElementById('btnRejectModify');
+
+  if (btnApproveBatch) {
+    btnApproveBatch.addEventListener('click', () => {
+      btnApproveBatch.disabled = true;
+      btnApproveBatch.innerHTML = '<span class="material-symbols-outlined text-[16px] animate-spin">sync</span> Approving...';
+      setTimeout(() => {
+        btnApproveBatch.innerHTML = '<span class="material-symbols-outlined text-[16px]">check</span> Approved';
+        btnApproveBatch.classList.remove('bg-primary');
+        btnApproveBatch.classList.add('bg-primary/20', 'text-primary', 'border', 'border-primary/40');
+        if (btnRejectModify) btnRejectModify.disabled = true;
+        showToast('Replenishment Approved', 'Task Review & Approve Completed. Parallel Multi-Instance RFQs sent to 3 suppliers.', 'success');
+      }, 700);
+    });
+  }
+
+  if (btnRejectModify) {
+    btnRejectModify.addEventListener('click', () => {
+      const reason = prompt('Please enter rejection rationale for this replenishment request:', 'Current store dairy stock exceeds shelf-life target.');
+      if (reason !== null) {
+        btnRejectModify.disabled = true;
+        btnRejectModify.textContent = 'Rejected';
+        btnRejectModify.classList.add('text-error', 'border-error/50');
+        if (btnApproveBatch) btnApproveBatch.disabled = true;
+        showToast('Request Rejected', `Replenishment REQ-1001 rejected. BPMN End Event 'End_RequestRejected' reached.`, 'warning');
+      }
+    });
+  }
+
+  // 8. Review Temp Spike Button
+  const btnReviewTempSpike = document.getElementById('btnReviewTempSpike');
+  if (btnReviewTempSpike) {
+    btnReviewTempSpike.addEventListener('click', () => {
+      window.location.href = 'qa-triage.html';
+    });
+  }
+
+  // 9. Table Row Inspection Details Modal
+  const modalShipmentDetails = document.getElementById('modalShipmentDetails');
+  const btnCloseShipmentModal = document.getElementById('btnCloseShipmentModal');
+  const btnCloseShipmentModal2 = document.getElementById('btnCloseShipmentModal2');
+
+  function openShipmentDetails(reqId, supplier, stage, temp) {
+    const title = document.getElementById('shipmentModalTitle');
+    const body = document.getElementById('shipmentModalBody');
+    if (title) title.textContent = `Shipment Lifecycle: ${reqId}`;
+    if (body) {
+      body.innerHTML = `
+        <div class="bg-surface-container p-3 rounded border border-outline-variant space-y-1">
+          <p><strong class="text-on-surface-variant">Request ID:</strong> <span class="text-primary">${reqId}</span></p>
+          <p><strong class="text-on-surface-variant">Assigned Supplier:</strong> ${supplier}</p>
+          <p><strong class="text-on-surface-variant">Current Stage:</strong> <span class="px-2 py-0.5 rounded bg-primary/20 text-primary">${stage}</span></p>
+          <p><strong class="text-on-surface-variant">Telemetry Reading:</strong> <span class="text-primary font-bold">${temp}</span></p>
+          <p><strong class="text-on-surface-variant">BPMN Workflow:</strong> cold-chain-replenishment-main.bpmn</p>
+        </div>
+        <div class="bg-surface-container p-3 rounded border border-outline-variant">
+          <p class="font-bold text-on-surface mb-1">Zeebe Process Token Trace:</p>
+          <ul class="list-disc pl-4 space-y-0.5 text-[11px] text-on-surface-variant">
+            <li>SubProcess_ColdChainTransit: Active</li>
+            <li>Timer Boundary Event PT5M: Armed</li>
+            <li>REST Connector (IoT Telemetry): Polling every 60s</li>
+          </ul>
+        </div>
+      `;
+    }
+    if (modalShipmentDetails) modalShipmentDetails.classList.remove('hidden');
+  }
+
+  if (btnCloseShipmentModal) btnCloseShipmentModal.addEventListener('click', () => modalShipmentDetails.classList.add('hidden'));
+  if (btnCloseShipmentModal2) btnCloseShipmentModal2.addEventListener('click', () => modalShipmentDetails.classList.add('hidden'));
+
+  // Wire up existing table row buttons
+  const b1 = document.getElementById('btnViewDetailsRow_1');
+  const b2 = document.getElementById('btnViewDetailsRow_2');
+  const b3 = document.getElementById('btnInspectNowRow_3');
+  const b4 = document.getElementById('btnViewDetailsRow_4');
+
+  if (b1) b1.addEventListener('click', () => openShipmentDetails('REQ-1001', 'Green Valley Dairy', 'In-Transit Telemetry', '4.2°C (Safe)'));
+  if (b2) b2.addEventListener('click', () => openShipmentDetails('REQ-1002', 'Hill Farms', 'Sequential PO Dispatched', '3.1°C (Safe)'));
+  if (b3) b3.addEventListener('click', () => window.location.href = 'qa-triage.html');
+  if (b4) b4.addEventListener('click', () => openShipmentDetails('REQ-1004', 'Sunny Pastures', '3-Way Match Completed', '5.0°C (Settled)'));
+
+  // 10. Filter Tabs
+  const filterTabs = [
+    { btn: document.getElementById('btnFilterAll'), type: 'all' },
+    { btn: document.getElementById('btnFilterTransit'), type: 'transit' },
+    { btn: document.getElementById('btnFilterQA'), type: 'qa' },
+    { btn: document.getElementById('btnFilterSettlement'), type: 'settlement' }
+  ];
+
+  filterTabs.forEach(({ btn, type }) => {
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      filterTabs.forEach(f => {
+        if (!f.btn) return;
+        f.btn.classList.remove('bg-primary', 'text-on-primary', 'font-semibold', 'shadow-sm');
+        f.btn.classList.add('text-on-surface-variant');
+      });
+      btn.classList.add('bg-primary', 'text-on-primary', 'font-semibold', 'shadow-sm');
+      btn.classList.remove('text-on-surface-variant');
+
+      // Filter rows
+      const r1 = document.getElementById('tableRow_1');
+      const r2 = document.getElementById('tableRow_2');
+      const r3 = document.getElementById('tableRow_3');
+      const r4 = document.getElementById('tableRow_4');
+
+      if (type === 'all') {
+        [r1, r2, r3, r4].forEach(r => r && (r.style.display = ''));
+      } else if (type === 'transit') {
+        if (r1) r1.style.display = '';
+        if (r2) r2.style.display = 'none';
+        if (r3) r3.style.display = 'none';
+        if (r4) r4.style.display = 'none';
+      } else if (type === 'qa') {
+        if (r1) r1.style.display = 'none';
+        if (r2) r2.style.display = 'none';
+        if (r3) r3.style.display = '';
+        if (r4) r4.style.display = 'none';
+      } else if (type === 'settlement') {
+        if (r1) r1.style.display = 'none';
+        if (r2) r2.style.display = 'none';
+        if (r3) r3.style.display = 'none';
+        if (r4) r4.style.display = '';
+      }
+      showToast('Filter Applied', `Table filtered to show: ${type.toUpperCase()}`, 'info');
+    });
+  });
+
+  // 11. Pagination buttons
+  const btnPrev = document.getElementById('btnPagePrev');
+  const btnNext = document.getElementById('btnPageNext');
+  let currentPage = 1;
+
+  if (btnNext) {
+    btnNext.addEventListener('click', () => {
+      currentPage = 2;
+      showToast('Page 2', 'Showing batches 5 to 8 of 12 (Historic Logs)', 'info');
+    });
+  }
+  if (btnPrev) {
+    btnPrev.addEventListener('click', () => {
+      currentPage = 1;
+      showToast('Page 1', 'Showing active batches 1 to 4 of 12', 'info');
+    });
+  }
+
+  // 12. Tasklist Link
+  const navTasklist = document.getElementById('navLinkTasklist');
+  if (navTasklist) {
+    navTasklist.addEventListener('click', (e) => {
+      e.preventDefault();
+      showToast('Zeebe Tasklist', '3 tasks active in cluster: Activity_ReviewRequest, Activity_QAExcursion, Activity_APReview', 'info');
+    });
+  }
+</script>
+
+</body></html>
