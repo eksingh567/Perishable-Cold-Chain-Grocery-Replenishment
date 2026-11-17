@@ -94,12 +94,22 @@ test('4. Frontend Pages, Buttons & Component Auditing', (t) => {
     'modalTelemetryLog',
     'modalRFQ',
     'modalDiscrepancy',
-    'toastContainer'
+    'toastContainer',
+    'btnFastAutoRun',
+    'btnFastSpikeTriage',
+    'btnFastResolveMatch',
+    'btnFastReset',
+    'fastProgressStepper'
   ];
 
   requiredIndexIds.forEach(id => {
     assert.ok(indexContent.includes(`id="${id}"`), `index.html must include element with id="${id}"`);
   });
+
+  // Ensure no broken template strings exist
+  assert.ok(!indexContent.includes('₹{ICONNAME}'), 'index.html must not contain broken ₹{ICONNAME}');
+  assert.ok(!indexContent.includes('₹{title}'), 'index.html must not contain broken ₹{title}');
+  assert.ok(!indexContent.includes('₹{message}'), 'index.html must not contain broken ₹{message}');
 
   const qaContent = fs.readFileSync(qaHtml, 'utf-8');
   const requiredQaIds = [
@@ -143,6 +153,24 @@ test('5. Local Server & REST API Endpoints Verification', async (t) => {
     const excursion = await fetchJson('/api/v1/telemetry/excursions');
     assert.equal(excursion.status, 200);
     assert.equal(excursion.body.criticalThresholdC, 8.0);
+
+    // Fast-Run End-to-End Camunda Engine test
+    const fastRunRes = await new Promise((resolve, reject) => {
+      const postReq = http.request(`http://localhost:${testPort}/api/v1/fast-run`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      }, (res) => {
+        let d = '';
+        res.on('data', chunk => d += chunk);
+        res.on('end', () => resolve({ status: res.statusCode, body: JSON.parse(d) }));
+      });
+      postReq.on('error', reject);
+      postReq.write('{}');
+      postReq.end();
+    });
+    assert.equal(fastRunRes.status, 200);
+    assert.equal(fastRunRes.body.status, 'COMPLETED');
+    assert.ok(fastRunRes.body.instance.instanceKey, 'Must generate real Camunda instance key');
   } finally {
     server.close();
   }
