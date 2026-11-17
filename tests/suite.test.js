@@ -118,7 +118,7 @@ test('4. Frontend Pages, Buttons & Component Auditing', (t) => {
 });
 
 test('5. Local Server & REST API Endpoints Verification', async (t) => {
-  const server = require('../server.js');
+  const { server } = require('../server.js');
   const testPort = 3899;
 
   await new Promise(resolve => server.listen(testPort, resolve));

@@ -1,10 +1,12 @@
 {
   "name": "perishable-cold-chain-grocery-replenishment",
   "version": "1.0.0",
-  "description": "Camunda 8 (Zeebe) Perishable Cold-Chain Grocery Replenishment System with Real-Time Stitch UI Frontend",
+  "description": "Camunda 8 (Zeebe 8.5+) Perishable Cold-Chain Grocery Replenishment System with Real-Time Stitch UI Frontend",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "backend": "node backend-service.js",
+    "dev": "node server.js",
     "test": "node --test tests/suite.test.js"
   },
   "keywords": [

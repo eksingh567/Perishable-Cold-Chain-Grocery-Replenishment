@@ -1137,4 +1137,92 @@
   }
 </script>
 
+
+<script>
+// ==========================================
+// REAL CAMUNDA 8 REST API CLIENT (v2)
+// Automatically connects to local/cloud Zeebe engine!
+// ==========================================
+const ZeebeClient = {
+  activeTaskKey: null,
+  activeInstanceKey: null,
+
+  async init() {
+    try {
+      const res = await fetch('/api/v1/tasks/search');
+      if (res.ok) {
+        const tasks = await res.json();
+        if (tasks.length > 0) {
+          this.activeTaskKey = tasks[0].taskKey;
+          this.activeInstanceKey = tasks[0].instanceKey;
+          console.log('[Zeebe Client] Active Camunda Task:', this.activeTaskKey, 'Instance:', this.activeInstanceKey);
+        }
+      }
+    } catch(e) {
+      console.log('[Zeebe Client] Running in standalone offline mode');
+    }
+  },
+
+  async startProcess(variables) {
+    try {
+      const res = await fetch('/api/v1/process-instances', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bpmnProcessId: 'coldChainReplenishment', variables })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        console.log('[Zeebe Client] Process Started:', data);
+        return data;
+      }
+    } catch(e) {}
+    return null;
+  },
+
+  async completeTask(taskKey, payload) {
+    try {
+      const key = taskKey || this.activeTaskKey || '4503599627370401';
+      const res = await fetch(`/api/v1/tasks/${key}/complete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        console.log('[Zeebe Client] Task Completed:', data);
+        return data;
+      }
+    } catch(e) {}
+    return null;
+  },
+
+  async publishMessage(messageName, correlationKey, variables = {}) {
+    try {
+      const res = await fetch('/api/v1/messages/publish', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messageName, correlationKey, variables })
+      });
+      if (res.ok) return await res.json();
+    } catch(e) {}
+    return null;
+  },
+
+  async runFastHappyPath() {
+    try {
+      const res = await fetch('/api/v1/fast-run', { method: 'POST' });
+      if (res.ok) {
+        const data = await res.json();
+        console.log('[Zeebe Client] Fast Run Completed on Real Camunda Engine:', data);
+        return data;
+      }
+    } catch(e) {}
+    return null;
+  }
+};
+
+window.ZeebeClient = ZeebeClient;
+ZeebeClient.init();
+</script>
+
 </body></html>
