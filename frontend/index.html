@@ -253,6 +253,55 @@
 </div>
 </div>
 </header>
+
+<!-- ==================== FAST & EASY WORKFLOW TOOLBAR ==================== -->
+<section class="w-full bg-surface-container-high/90 border-b border-primary/30 px-margin-desktop py-2.5 shadow-sm">
+  <div class="max-w-[1920px] mx-auto flex flex-wrap items-center justify-between gap-3">
+    <!-- Left: Status pill -->
+    <div class="flex items-center gap-2.5">
+      <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/30 text-primary font-label-code text-xs font-semibold">
+        <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+        <span>FAST WORKFLOW MODE</span>
+      </div>
+      <span class="text-xs text-on-surface-variant hidden sm:inline">Instant 1-Click automation • No complicated manual steps</span>
+    </div>
+
+    <!-- Center/Right: 1-Click Fast Action Buttons -->
+    <div class="flex items-center gap-2">
+      <button id="btnFastAutoRun" class="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-body-sm text-xs font-bold shadow-md flex items-center gap-1.5 transition-all transform active:scale-95" title="Run whole cycle end-to-end in 3 seconds">
+        <span class="material-symbols-outlined text-[18px]">bolt</span>
+        <span>⚡ 1-Click Auto Run (Instant)</span>
+      </button>
+
+      <button id="btnFastSpikeTriage" class="px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 font-label-code text-xs font-semibold flex items-center gap-1.5 transition-colors active:scale-95" title="Simulate temp breach and auto-resolve">
+        <span class="material-symbols-outlined text-[16px]">thermostat</span>
+        <span>⚡ Quick Temp Spike Test</span>
+      </button>
+
+      <button id="btnFastResolveMatch" class="px-3 py-1.5 rounded-lg bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/40 text-sky-300 font-label-code text-xs font-semibold flex items-center gap-1.5 transition-colors active:scale-95" title="Resolve 3-way match instantly">
+        <span class="material-symbols-outlined text-[16px]">price_check</span>
+        <span>⚡ 1-Click 3-Way Match</span>
+      </button>
+
+      <button id="btnFastReset" class="p-1.5 rounded-lg bg-surface-container border border-outline-variant hover:text-primary text-on-surface-variant transition-colors" title="Reset Simulation">
+        <span class="material-symbols-outlined text-[18px]">restart_alt</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Animated Progress Stepper for 1-Click Fast Run -->
+  <div id="fastProgressStepper" class="hidden mt-2 pt-2 border-t border-outline-variant/50 max-w-[1920px] mx-auto">
+    <div class="flex items-center justify-between text-[11px] font-label-code mb-1">
+      <span id="stepperStatusText" class="text-primary font-bold">⚡ Running Auto-Pilot Pipeline...</span>
+      <span id="stepperPercentText" class="text-on-surface-variant">0%</span>
+    </div>
+    <div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+      <div id="stepperProgressBar" class="bg-primary h-full transition-all duration-300 w-0"></div>
+    </div>
+  </div>
+</section>
+
+
 <!-- ==================== MAIN DASHBOARD VIEWPORT ==================== -->
 <main class="flex-1 w-full max-w-[1720px] mx-auto px-margin-desktop py-space-xl flex flex-col gap-space-xl">
 <!-- SUBHEADER / CONTEXT BANNER -->
@@ -357,8 +406,8 @@
 <span class="text-on-surface-variant font-label-code text-label-code">auto-cleared</span>
 </div>
 <div class="pt-2 border-t border-outline-variant/30 text-on-surface-variant font-body-sm text-body-sm flex items-center justify-between">
-<span>Auto-Matched: <strong class="text-on-surface font-semibold">$4,850</strong></span>
-<span class="font-label-code text-label-code text-on-surface-variant">Cap: $5,000</span>
+<span>Auto-Matched: <strong class="text-on-surface font-semibold">₹4,850</strong></span>
+<span class="font-label-code text-label-code text-on-surface-variant">Cap: ₹5,000</span>
 </div>
 </div>
 </section>
@@ -555,7 +604,7 @@
               </span>
 </div>
 <div class="font-label-code text-xs text-on-surface-variant">
-              Request <strong class="text-on-surface">REQ-1001</strong> • Store #12 Metro Fresh • Budget Cap: $5,000 (<span class="text-primary font-semibold">Allocated: $4,850</span>)
+              Request <strong class="text-on-surface">REQ-1001</strong> • Store #12 Metro Fresh • Budget Cap: ₹50,000 (<span class="text-primary font-semibold">Allocated: ₹4,850</span>)
             </div>
 <div class="bg-surface-container p-2 rounded text-body-sm font-label-code text-[11px] text-on-surface flex justify-between">
 <span>200x Milk 1L Whole Organic</span>
@@ -605,7 +654,7 @@
               </span>
 </div>
 <p class="font-body-sm text-xs text-on-surface-variant">
-              Invoice <strong class="text-on-surface font-label-code">#INV-9921 ($4,920)</strong> vs PO-1001 ($4,850) — <strong class="text-tertiary font-label-code">+$70 delta</strong> requires manual bypass exception.
+              Invoice <strong class="text-on-surface font-label-code">#INV-9921 (₹49,200)</strong> vs PO-1001 (₹48,500) — <strong class="text-tertiary font-label-code">+₹700 delta</strong> requires manual bypass exception.
             </p>
 <button class="w-full py-1.5 px-3 rounded bg-secondary-container/30 border border-secondary/40 text-secondary font-body-sm text-xs font-semibold hover:bg-secondary-container/50 transition-colors flex items-center justify-center gap-1 active:scale-95" id="btnReviewDiscrepancy" title="Review 3-Way Discrepancy">
 <span class="material-symbols-outlined text-xs" data-icon="balance">balance</span>
@@ -834,7 +883,7 @@
       const m = String(now.getUTCMinutes()).padStart(2, '0');
       const s = String(now.getUTCSeconds()).padStart(2, '0');
       const clockEl = document.getElementById('clock-utc');
-      if (clockEl) clockEl.textContent = `${h}:${m}:${s} UTC`;
+      if (clockEl) clockEl.textContent = `₹{h}:₹{m}:₹{s} UTC`;
     }
     setInterval(updateClock, 1000);
     updateClock();
@@ -879,7 +928,7 @@
         totalSeconds--;
         const mins = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
         const secs = String(totalSeconds % 60).padStart(2, '0');
-        if (slaTimerEl) slaTimerEl.textContent = `${mins}:${secs}`;
+        if (slaTimerEl) slaTimerEl.textContent = `₹{mins}:₹{secs}`;
       }
     }, 1000);
   </script>
@@ -906,7 +955,7 @@
       <span class="material-symbols-outlined text-secondary text-[18px] mt-0.5">request_quote</span>
       <div class="flex-1">
         <p class="text-xs font-semibold text-on-surface">RFQ Quotations Received</p>
-        <p class="text-[11px] text-on-surface-variant">Green Valley Dairy awarded $3,200 via FEEL ranking algorithm.</p>
+        <p class="text-[11px] text-on-surface-variant">Green Valley Dairy awarded ₹32,000 via FEEL ranking algorithm.</p>
         <span class="text-[10px] font-label-code text-on-surface-variant/70">18 mins ago • MI Subprocess</span>
       </div>
     </div>
@@ -914,7 +963,7 @@
       <span class="material-symbols-outlined text-tertiary text-[18px] mt-0.5">balance</span>
       <div class="flex-1">
         <p class="text-xs font-semibold text-on-surface">3-Way Match Exception: INV-9921</p>
-        <p class="text-[11px] text-on-surface-variant">Invoice ($4,920) has $70 freight variance vs PO ($4,850).</p>
+        <p class="text-[11px] text-on-surface-variant">Invoice (₹49,200) has ₹700 freight variance vs PO (₹4,850).</p>
         <span class="text-[10px] font-label-code text-on-surface-variant/70">42 mins ago • Call Activity</span>
       </div>
     </div>
@@ -1036,8 +1085,8 @@
           <input type="number" id="newMaxTemp" value="8" min="2" max="10" class="w-full bg-surface-container border border-outline-variant rounded p-2 text-xs font-label-code text-on-surface">
         </div>
         <div>
-          <label class="block font-label-code text-xs text-on-surface-variant mb-1">Allocated Budget Cap ($)</label>
-          <input type="number" id="newBudgetCap" value="5000" min="1000" max="25000" class="w-full bg-surface-container border border-outline-variant rounded p-2 text-xs font-label-code text-on-surface">
+          <label class="block font-label-code text-xs text-on-surface-variant mb-1">Allocated Budget Cap (₹)</label>
+          <input type="number" id="newBudgetCap" value="50000" min="1000" max="25000" class="w-full bg-surface-container border border-outline-variant rounded p-2 text-xs font-label-code text-on-surface">
         </div>
       </div>
 
@@ -1136,10 +1185,10 @@
         <div>
           <span class="px-2 py-0.5 rounded bg-primary/20 text-primary font-label-code text-[10px] font-bold">RANK 1 (SELECTED)</span>
           <h4 class="font-bold text-sm text-on-surface mt-1">Green Valley Dairy (SUP-A)</h4>
-          <p class="text-xs text-on-surface-variant">200x Milk 1L @ $8.00 • 150x Yogurt @ $10.66</p>
+          <p class="text-xs text-on-surface-variant">200x Milk 1L @ ₹80.00 • 150x Yogurt @ ₹105.00</p>
         </div>
         <div class="text-right">
-          <p class="text-base font-bold text-primary font-label-code">$3,200.00</p>
+          <p class="text-base font-bold text-primary font-label-code">₹32,000.00</p>
           <span class="text-[10px] font-label-code text-on-surface-variant">PO-REQ-1001-SUP-A</span>
         </div>
       </div>
@@ -1151,7 +1200,7 @@
           <p class="text-xs text-on-surface-variant">Higher freight rate • 200x Milk + 150x Yogurt</p>
         </div>
         <div class="text-right">
-          <p class="text-base font-bold text-on-surface font-label-code">$3,600.00</p>
+          <p class="text-base font-bold text-on-surface font-label-code">₹36,000.00</p>
           <span class="text-[10px] font-label-code text-on-surface-variant">Quote Received</span>
         </div>
       </div>
@@ -1163,7 +1212,7 @@
           <p class="text-xs text-on-surface-variant">Premium batch surcharge</p>
         </div>
         <div class="text-right">
-          <p class="text-base font-bold text-on-surface font-label-code">$4,100.00</p>
+          <p class="text-base font-bold text-on-surface font-label-code">₹41,000.00</p>
           <span class="text-[10px] font-label-code text-on-surface-variant">Quote Received</span>
         </div>
       </div>
@@ -1192,7 +1241,7 @@
     <div class="mt-4 grid grid-cols-3 gap-2 text-center">
       <div class="bg-surface-container p-2.5 rounded border border-outline-variant">
         <p class="text-[10px] font-label-code text-on-surface-variant">1. PURCHASE ORDER</p>
-        <p class="text-sm font-bold text-on-surface font-label-code mt-1">$4,850.00</p>
+        <p class="text-sm font-bold text-on-surface font-label-code mt-1">₹48,500.00</p>
         <span class="text-[10px] text-primary">PO-1001 • 350 Units</span>
       </div>
       <div class="bg-surface-container p-2.5 rounded border border-outline-variant">
@@ -1202,14 +1251,14 @@
       </div>
       <div class="bg-surface-container p-2.5 rounded border border-tertiary/60">
         <p class="text-[10px] font-label-code text-tertiary">3. INVOICE AMOUNT</p>
-        <p class="text-sm font-bold text-tertiary font-label-code mt-1">$4,920.00</p>
-        <span class="text-[10px] text-error font-semibold">+$70.00 Variance</span>
+        <p class="text-sm font-bold text-tertiary font-label-code mt-1">₹49,200.00</p>
+        <span class="text-[10px] text-error font-semibold">+₹700.00 Variance</span>
       </div>
     </div>
 
     <div class="mt-4 p-3 rounded bg-surface-container border border-outline-variant text-xs">
       <p class="font-semibold text-on-surface mb-1">Discrepancy Rationale from Supplier:</p>
-      <p class="text-on-surface-variant">Fuel surcharge of $70 applied due to emergency refrigerated re-routing during transit. Under store tolerance limit of $100.</p>
+      <p class="text-on-surface-variant">Fuel surcharge of ₹700 applied due to emergency refrigerated re-routing during transit. Under store tolerance limit of ₹1,000.</p>
     </div>
 
     <div class="pt-4 border-t border-outline-variant flex gap-2 justify-end mt-4">
@@ -1286,7 +1335,7 @@
     if (!container) return;
 
     const toast = document.createElement('div');
-    toast.className = `pointer-events-auto flex items-start gap-3 p-3.5 rounded-xl border shadow-xl transition-all duration-300 transform translate-y-2 opacity-0 text-xs ${
+    toast.className = `pointer-events-auto flex items-start gap-3 p-3.5 rounded-xl border shadow-xl transition-all duration-300 transform translate-y-2 opacity-0 text-xs ₹{
       type === 'error' ? 'bg-error-container/90 border-error/50 text-error' :
       type === 'warning' ? 'bg-tertiary-container/90 border-tertiary/50 text-tertiary' :
       'bg-surface-container-high border-primary/40 text-on-surface'
@@ -1296,10 +1345,10 @@
     const iconColor = type === 'error' ? 'text-error' : type === 'warning' ? 'text-tertiary' : 'text-primary';
 
     toast.innerHTML = `
-      <span class="material-symbols-outlined ${iconColor} text-[20px] mt-0.5">${iconName}</span>
+      <span class="material-symbols-outlined ₹{iconColor} text-[20px] mt-0.5">₹{iconName}</span>
       <div class="flex-1">
-        <p class="font-bold font-body-sm">${title}</p>
-        <p class="text-on-surface-variant text-[11px] mt-0.5">${message}</p>
+        <p class="font-bold font-body-sm">₹{title}</p>
+        <p class="text-on-surface-variant text-[11px] mt-0.5">₹{message}</p>
       </div>
       <button class="text-on-surface-variant hover:text-on-surface p-1" onclick="this.parentElement.remove()">
         <span class="material-symbols-outlined text-[16px]">close</span>
@@ -1359,12 +1408,12 @@
 
   if (inputMaxTemp && labelMaxTemp) {
     inputMaxTemp.addEventListener('input', () => {
-      labelMaxTemp.textContent = `${inputMaxTemp.value}°C`;
+      labelMaxTemp.textContent = `₹{inputMaxTemp.value}°C`;
     });
   }
   if (inputSlaMins && labelSlaMins) {
     inputSlaMins.addEventListener('input', () => {
-      labelSlaMins.textContent = `${inputSlaMins.value} mins`;
+      labelSlaMins.textContent = `₹{inputSlaMins.value} mins`;
     });
   }
 
@@ -1377,7 +1426,7 @@
   if (btnSaveSettings && drawerSettings) {
     btnSaveSettings.addEventListener('click', () => {
       drawerSettings.classList.add('hidden');
-      showToast('Settings Saved', `Max Permissible Temp SLA set to ${inputMaxTemp.value}°C. Engine updated.`, 'success');
+      showToast('Settings Saved', `Max Permissible Temp SLA set to ₹{inputMaxTemp.value}°C. Engine updated.`, 'success');
     });
   }
 
@@ -1411,18 +1460,18 @@
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-surface-container-high/30 transition-colors bg-primary/5';
         tr.innerHTML = `
-          <td class="p-3 font-semibold text-primary font-label-code">${reqId}</td>
+          <td class="p-3 font-semibold text-primary font-label-code">₹{reqId}</td>
           <td class="p-3 text-on-surface">250x Milk 1L, 300x Berries</td>
           <td class="p-3 text-on-surface font-label-code">Green Valley Dairy</td>
           <td class="p-3"><span class="px-2 py-0.5 rounded text-[11px] font-label-code bg-primary/10 text-primary border border-primary/30 font-semibold">3.6°C (Optimal)</span></td>
           <td class="p-3 font-label-code text-on-surface-variant">04m 58s remaining</td>
           <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-label-code bg-primary/20 text-primary font-bold">RFQ Dispatched</span></td>
-          <td class="p-3"><button class="px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/70 text-on-surface hover:text-primary font-label-code text-xs" onclick="openShipmentDetails('${reqId}', 'Green Valley Dairy', 'RFQ Dispatched', '3.6°C')">View Details</button></td>
+          <td class="p-3"><button class="px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/70 text-on-surface hover:text-primary font-label-code text-xs" onclick="openShipmentDetails('₹{reqId}', 'Green Valley Dairy', 'RFQ Dispatched', '3.6°C')">View Details</button></td>
         `;
         tbody.insertBefore(tr, tbody.firstChild);
       }
 
-      showToast('Process Instance Created', `Zeebe Process Instance ${reqId} started for ${storeId}. RFQ broadcast dispatched.`, 'success');
+      showToast('Process Instance Created', `Zeebe Process Instance ₹{reqId} started for ₹{storeId}. RFQ broadcast dispatched.`, 'success');
     });
   }
 
@@ -1523,7 +1572,7 @@
         btnReviewDiscrepancy.classList.remove('bg-secondary-container/30', 'text-secondary');
         btnReviewDiscrepancy.classList.add('bg-primary/20', 'text-primary', 'border-primary/40');
       }
-      showToast('Discrepancy Approved', 'AP Clerk approved $70 variance bypass. Call Activity completed successfully.', 'success');
+      showToast('Discrepancy Approved', 'AP Clerk approved ₹700 variance bypass. Call Activity completed successfully.', 'success');
     });
   }
 
@@ -1581,14 +1630,14 @@
   function openShipmentDetails(reqId, supplier, stage, temp) {
     const title = document.getElementById('shipmentModalTitle');
     const body = document.getElementById('shipmentModalBody');
-    if (title) title.textContent = `Shipment Lifecycle: ${reqId}`;
+    if (title) title.textContent = `Shipment Lifecycle: ₹{reqId}`;
     if (body) {
       body.innerHTML = `
         <div class="bg-surface-container p-3 rounded border border-outline-variant space-y-1">
-          <p><strong class="text-on-surface-variant">Request ID:</strong> <span class="text-primary">${reqId}</span></p>
-          <p><strong class="text-on-surface-variant">Assigned Supplier:</strong> ${supplier}</p>
-          <p><strong class="text-on-surface-variant">Current Stage:</strong> <span class="px-2 py-0.5 rounded bg-primary/20 text-primary">${stage}</span></p>
-          <p><strong class="text-on-surface-variant">Telemetry Reading:</strong> <span class="text-primary font-bold">${temp}</span></p>
+          <p><strong class="text-on-surface-variant">Request ID:</strong> <span class="text-primary">₹{reqId}</span></p>
+          <p><strong class="text-on-surface-variant">Assigned Supplier:</strong> ₹{supplier}</p>
+          <p><strong class="text-on-surface-variant">Current Stage:</strong> <span class="px-2 py-0.5 rounded bg-primary/20 text-primary">₹{stage}</span></p>
+          <p><strong class="text-on-surface-variant">Telemetry Reading:</strong> <span class="text-primary font-bold">₹{temp}</span></p>
           <p><strong class="text-on-surface-variant">BPMN Workflow:</strong> cold-chain-replenishment-main.bpmn</p>
         </div>
         <div class="bg-surface-container p-3 rounded border border-outline-variant">
@@ -1661,7 +1710,7 @@
         if (r3) r3.style.display = 'none';
         if (r4) r4.style.display = '';
       }
-      showToast('Filter Applied', `Table filtered to show: ${type.toUpperCase()}`, 'info');
+      showToast('Filter Applied', `Table filtered to show: ₹{type.toUpperCase()}`, 'info');
     });
   });
 
@@ -1691,6 +1740,234 @@
       showToast('Zeebe Tasklist', '3 tasks active in cluster: Activity_ReviewRequest, Activity_QAExcursion, Activity_APReview', 'info');
     });
   }
+</script>
+
+
+<script>
+  // ==================== FAST & EASY WORKFLOW CONTROLS ====================
+  const btnFastAuto = document.getElementById('btnFastAutoRun');
+  const btnFastSpike = document.getElementById('btnFastSpikeTriage');
+  const btnFastMatch = document.getElementById('btnFastResolveMatch');
+  const btnFastReset = document.getElementById('btnFastReset');
+  const stepper = document.getElementById('fastProgressStepper');
+  const stepperText = document.getElementById('stepperStatusText');
+  const stepperPct = document.getElementById('stepperPercentText');
+  const stepperBar = document.getElementById('stepperProgressBar');
+
+  let isFastRunning = false;
+
+  if (btnFastAuto) {
+    btnFastAuto.addEventListener('click', () => {
+      if (isFastRunning) return;
+      isFastRunning = true;
+      btnFastAuto.disabled = true;
+      if (stepper) stepper.classList.remove('hidden');
+
+      const setStep = (pct, msg) => {
+        if (stepperBar) stepperBar.style.width = `${pct}%`;
+        if (stepperPct) stepperPct.textContent = `${pct}%`;
+        if (stepperText) stepperText.textContent = msg;
+      };
+
+      // Step 1: Approve Request (0.6s)
+      setStep(15, "Step 1/5: Store Manager approving REQ-1001 (Budget: ₹50,000)...");
+      showToast("Step 1: Request Approved", "Budget ₹50,000 confirmed for Store-12", "info");
+
+      setTimeout(() => {
+        const btnApprove = document.getElementById('btnApproveBatch');
+        if (btnApprove) {
+          btnApprove.innerHTML = '<span class="material-symbols-outlined text-[16px]">check</span> Approved (₹48,500)';
+          btnApprove.classList.remove('bg-primary');
+          btnApprove.classList.add('bg-primary/20', 'text-primary', 'border-primary/40');
+        }
+
+        // Step 2: Parallel Quotes Received & Ranked (1.2s)
+        setStep(40, "Step 2/5: Comparing regional dairy bids via FEEL ranking...");
+        showToast("Step 2: Quotes Evaluated", "Green Valley Dairy won with lowest bid: ₹32,000", "info");
+
+        setTimeout(() => {
+          // Step 3: Sequential PO Dispatched (1.8s)
+          setStep(65, "Step 3/5: Purchase order PO-1001 auto-dispatched to Supplier API...");
+          showToast("Step 3: PO Dispatched", "Truck #TK-882 en route under cold-chain monitoring", "info");
+
+          setTimeout(() => {
+            // Step 4: Temperature Verification & Dock Receiving (2.5s)
+            setStep(85, "Step 4/5: Pallets arrived at Dock 4. Temperature verified at 3.8°C (Safe)...");
+            showToast("Step 4: Dock Inspection Passed", "350 units received intact without thermal excursion", "info");
+
+            setTimeout(() => {
+              // Step 5: 3-Way Match & Completion (3.2s)
+              setStep(100, "Step 5/5: Automated 3-Way Match verified (PO = GR = Invoice = ₹48,500). Completed!");
+              
+              const btnDisc = document.getElementById('btnReviewDiscrepancy');
+              if (btnDisc) {
+                btnDisc.innerHTML = '<span class="material-symbols-outlined text-[16px]">verified</span> 3-Way Match Settled';
+                btnDisc.classList.remove('bg-secondary-container/30', 'text-secondary');
+                btnDisc.classList.add('bg-primary/20', 'text-primary', 'border-primary/40');
+              }
+
+              showToast("Replenishment Completed! 🎉", "Full cycle finished in 3.2s! Zero complications, ₹48,500 settled cleanly.", "success");
+              
+              setTimeout(() => {
+                if (stepper) stepper.classList.add('hidden');
+                btnFastAuto.disabled = false;
+                isFastRunning = false;
+              }, 2500);
+
+            }, 800);
+          }, 800);
+        }, 800);
+      }, 700);
+    });
+  }
+
+  // Quick Temp Spike Test & Auto-Triage
+  if (btnFastSpike) {
+    btnFastSpike.addEventListener('click', () => {
+      const banner = document.getElementById('excursionAlertBanner');
+      const tempDisplay = document.getElementById('live-temp-display');
+      if (banner) banner.classList.remove('hidden');
+      if (tempDisplay) {
+        tempDisplay.textContent = '8.4°C';
+        tempDisplay.classList.remove('text-primary');
+        tempDisplay.classList.add('text-error', 'animate-pulse');
+      }
+      showToast("Temp Excursion Simulated", "Trailer core temp breached 8.0°C! Auto-triage recommended.", "warning");
+
+      setTimeout(() => {
+        showToast("Auto-Triage Applied", "Carrier diverted to auxiliary chiller. Quality score protected.", "info");
+      }, 1500);
+    });
+  }
+
+  // Quick 3-Way Match 1-Click
+  if (btnFastMatch) {
+    btnFastMatch.addEventListener('click', () => {
+      const btnDisc = document.getElementById('btnReviewDiscrepancy');
+      if (btnDisc) {
+        btnDisc.innerHTML = '<span class="material-symbols-outlined text-[16px]">verified</span> 1-Click Bypass Approved';
+        btnDisc.classList.remove('bg-secondary-container/30', 'text-secondary');
+        btnDisc.classList.add('bg-primary/20', 'text-primary', 'border-primary/40');
+      }
+      showToast("1-Click 3-Way Match Approved", "₹700 fuel surcharge approved under tolerance. Payment scheduled.", "success");
+    });
+  }
+
+  // Quick Reset Simulation
+  if (btnFastReset) {
+    btnFastReset.addEventListener('click', () => {
+      const banner = document.getElementById('excursionAlertBanner');
+      const tempDisplay = document.getElementById('live-temp-display');
+      const btnApprove = document.getElementById('btnApproveBatch');
+      const btnDisc = document.getElementById('btnReviewDiscrepancy');
+
+      if (banner) banner.classList.add('hidden');
+      if (tempDisplay) {
+        tempDisplay.textContent = '4.2°C';
+        tempDisplay.classList.remove('text-error', 'animate-pulse');
+        tempDisplay.classList.add('text-primary');
+      }
+      if (btnApprove) {
+        btnApprove.disabled = false;
+        btnApprove.innerHTML = '<span class="material-symbols-outlined text-[16px]">done_all</span> Approve Batch';
+        btnApprove.className = 'flex-1 py-1.5 px-3 rounded bg-primary text-on-primary font-body-sm text-xs font-semibold hover:bg-primary-fixed transition-colors flex items-center justify-center gap-1 active:scale-95';
+      }
+      if (btnDisc) {
+        btnDisc.disabled = false;
+        btnDisc.innerHTML = '<span class="material-symbols-outlined text-[16px]">balance</span> Review Match Discrepancy';
+        btnDisc.className = 'w-full py-1.5 px-3 rounded bg-secondary-container/30 border border-secondary/40 text-secondary font-body-sm text-xs font-semibold hover:bg-secondary-container/50 transition-colors flex items-center justify-center gap-1 active:scale-95';
+      }
+      showToast("Simulation Reset", "Workflow state restored to fresh clean request REQ-1001.", "info");
+    });
+  }
+</script>
+
+
+<script>
+// ==========================================
+// REAL CAMUNDA 8 REST API CLIENT (v2)
+// Automatically connects to local/cloud Zeebe engine!
+// ==========================================
+const ZeebeClient = {
+  activeTaskKey: null,
+  activeInstanceKey: null,
+
+  async init() {
+    try {
+      const res = await fetch('/api/v1/tasks/search');
+      if (res.ok) {
+        const tasks = await res.json();
+        if (tasks.length > 0) {
+          this.activeTaskKey = tasks[0].taskKey;
+          this.activeInstanceKey = tasks[0].instanceKey;
+          console.log('[Zeebe Client] Active Camunda Task:', this.activeTaskKey, 'Instance:', this.activeInstanceKey);
+        }
+      }
+    } catch(e) {
+      console.log('[Zeebe Client] Running in standalone offline mode');
+    }
+  },
+
+  async startProcess(variables) {
+    try {
+      const res = await fetch('/api/v1/process-instances', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bpmnProcessId: 'coldChainReplenishment', variables })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        console.log('[Zeebe Client] Process Started:', data);
+        return data;
+      }
+    } catch(e) {}
+    return null;
+  },
+
+  async completeTask(taskKey, payload) {
+    try {
+      const key = taskKey || this.activeTaskKey || '4503599627370401';
+      const res = await fetch(`/api/v1/tasks/${key}/complete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        console.log('[Zeebe Client] Task Completed:', data);
+        return data;
+      }
+    } catch(e) {}
+    return null;
+  },
+
+  async publishMessage(messageName, correlationKey, variables = {}) {
+    try {
+      const res = await fetch('/api/v1/messages/publish', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messageName, correlationKey, variables })
+      });
+      if (res.ok) return await res.json();
+    } catch(e) {}
+    return null;
+  },
+
+  async runFastHappyPath() {
+    try {
+      const res = await fetch('/api/v1/fast-run', { method: 'POST' });
+      if (res.ok) {
+        const data = await res.json();
+        console.log('[Zeebe Client] Fast Run Completed on Real Camunda Engine:', data);
+        return data;
+      }
+    } catch(e) {}
+    return null;
+  }
+};
+
+window.ZeebeClient = ZeebeClient;
+ZeebeClient.init();
 </script>
 
 </body></html>
