@@ -883,7 +883,7 @@
       const m = String(now.getUTCMinutes()).padStart(2, '0');
       const s = String(now.getUTCSeconds()).padStart(2, '0');
       const clockEl = document.getElementById('clock-utc');
-      if (clockEl) clockEl.textContent = `₹{h}:₹{m}:₹{s} UTC`;
+      if (clockEl) clockEl.textContent = `${h}:${m}:${s} UTC`;
     }
     setInterval(updateClock, 1000);
     updateClock();
@@ -928,7 +928,7 @@
         totalSeconds--;
         const mins = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
         const secs = String(totalSeconds % 60).padStart(2, '0');
-        if (slaTimerEl) slaTimerEl.textContent = `₹{mins}:₹{secs}`;
+        if (slaTimerEl) slaTimerEl.textContent = `${mins}:${secs}`;
       }
     }, 1000);
   </script>
@@ -1329,28 +1329,35 @@
   }
 
   // Universal Toast Notification
+  // Universal Toast Notification (Max 2 clean toasts, auto-dismiss)
   function showToast(title, message, type = 'success') {
     playAudioChime(type);
     const container = document.getElementById('toastContainer');
     if (!container) return;
 
+    // Keep max 2 toasts so screen never clutters
+    while (container.children.length >= 2) {
+      container.firstElementChild.remove();
+    }
+
     const toast = document.createElement('div');
-    toast.className = `pointer-events-auto flex items-start gap-3 p-3.5 rounded-xl border shadow-xl transition-all duration-300 transform translate-y-2 opacity-0 text-xs ₹{
-      type === 'error' ? 'bg-error-container/90 border-error/50 text-error' :
-      type === 'warning' ? 'bg-tertiary-container/90 border-tertiary/50 text-tertiary' :
-      'bg-surface-container-high border-primary/40 text-on-surface'
+    toast.className = `pointer-events-auto flex items-start gap-3 p-3 rounded-xl border shadow-2xl transition-all duration-300 transform translate-y-2 opacity-0 text-xs z-[9999] min-w-[280px] max-w-sm ${
+      type === 'error' ? 'bg-error-container/95 border-error/50 text-error' :
+      type === 'warning' ? 'bg-tertiary-container/95 border-tertiary/50 text-tertiary' :
+      type === 'info' ? 'bg-surface-container-high border-secondary/40 text-secondary' :
+      'bg-surface-container-high border-primary/50 text-on-surface'
     }`;
 
-    const iconName = type === 'error' ? 'report' : type === 'warning' ? 'warning' : 'check_circle';
-    const iconColor = type === 'error' ? 'text-error' : type === 'warning' ? 'text-tertiary' : 'text-primary';
+    const iconName = type === 'error' ? 'report' : type === 'warning' ? 'warning' : type === 'info' ? 'info' : 'check_circle';
+    const iconColor = type === 'error' ? 'text-error' : type === 'warning' ? 'text-tertiary' : type === 'info' ? 'text-secondary' : 'text-primary';
 
     toast.innerHTML = `
-      <span class="material-symbols-outlined ₹{iconColor} text-[20px] mt-0.5">₹{iconName}</span>
-      <div class="flex-1">
-        <p class="font-bold font-body-sm">₹{title}</p>
-        <p class="text-on-surface-variant text-[11px] mt-0.5">₹{message}</p>
+      <span class="material-symbols-outlined ${iconColor} text-[20px] mt-0.5 shrink-0">${iconName}</span>
+      <div class="flex-1 pr-1">
+        <p class="font-bold text-xs text-on-surface">${title}</p>
+        <p class="text-on-surface-variant text-[11px] mt-0.5">${message}</p>
       </div>
-      <button class="text-on-surface-variant hover:text-on-surface p-1" onclick="this.parentElement.remove()">
+      <button class="text-on-surface-variant hover:text-on-surface p-0.5 shrink-0" onclick="this.parentElement.remove()">
         <span class="material-symbols-outlined text-[16px]">close</span>
       </button>
     `;
@@ -1362,8 +1369,8 @@
 
     setTimeout(() => {
       toast.classList.add('opacity-0', 'translate-y-2');
-      setTimeout(() => toast.remove(), 300);
-    }, 4500);
+      setTimeout(() => toast.remove(), 250);
+    }, 2500);
   }
 
   // 1. Notification Dropdown Toggle
@@ -1408,12 +1415,12 @@
 
   if (inputMaxTemp && labelMaxTemp) {
     inputMaxTemp.addEventListener('input', () => {
-      labelMaxTemp.textContent = `₹{inputMaxTemp.value}°C`;
+      labelMaxTemp.textContent = `${inputMaxTemp.value}°C`;
     });
   }
   if (inputSlaMins && labelSlaMins) {
     inputSlaMins.addEventListener('input', () => {
-      labelSlaMins.textContent = `₹{inputSlaMins.value} mins`;
+      labelSlaMins.textContent = `${inputSlaMins.value} mins`;
     });
   }
 
@@ -1426,7 +1433,7 @@
   if (btnSaveSettings && drawerSettings) {
     btnSaveSettings.addEventListener('click', () => {
       drawerSettings.classList.add('hidden');
-      showToast('Settings Saved', `Max Permissible Temp SLA set to ₹{inputMaxTemp.value}°C. Engine updated.`, 'success');
+      showToast('Settings Saved', `Max Permissible Temp SLA set to ${inputMaxTemp.value}°C. Engine updated.`, 'success');
     });
   }
 
@@ -1460,18 +1467,18 @@
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-surface-container-high/30 transition-colors bg-primary/5';
         tr.innerHTML = `
-          <td class="p-3 font-semibold text-primary font-label-code">₹{reqId}</td>
+          <td class="p-3 font-semibold text-primary font-label-code">${reqId}</td>
           <td class="p-3 text-on-surface">250x Milk 1L, 300x Berries</td>
           <td class="p-3 text-on-surface font-label-code">Green Valley Dairy</td>
           <td class="p-3"><span class="px-2 py-0.5 rounded text-[11px] font-label-code bg-primary/10 text-primary border border-primary/30 font-semibold">3.6°C (Optimal)</span></td>
           <td class="p-3 font-label-code text-on-surface-variant">04m 58s remaining</td>
           <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-label-code bg-primary/20 text-primary font-bold">RFQ Dispatched</span></td>
-          <td class="p-3"><button class="px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/70 text-on-surface hover:text-primary font-label-code text-xs" onclick="openShipmentDetails('₹{reqId}', 'Green Valley Dairy', 'RFQ Dispatched', '3.6°C')">View Details</button></td>
+          <td class="p-3"><button class="px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/70 text-on-surface hover:text-primary font-label-code text-xs" onclick="openShipmentDetails('${reqId}', 'Green Valley Dairy', 'RFQ Dispatched', '3.6°C')">View Details</button></td>
         `;
         tbody.insertBefore(tr, tbody.firstChild);
       }
 
-      showToast('Process Instance Created', `Zeebe Process Instance ₹{reqId} started for ₹{storeId}. RFQ broadcast dispatched.`, 'success');
+      showToast('Process Instance Created', `Zeebe Process Instance ${reqId} started for ${storeId}. RFQ broadcast dispatched.`, 'success');
     });
   }
 
@@ -1630,14 +1637,14 @@
   function openShipmentDetails(reqId, supplier, stage, temp) {
     const title = document.getElementById('shipmentModalTitle');
     const body = document.getElementById('shipmentModalBody');
-    if (title) title.textContent = `Shipment Lifecycle: ₹{reqId}`;
+    if (title) title.textContent = `Shipment Lifecycle: ${reqId}`;
     if (body) {
       body.innerHTML = `
         <div class="bg-surface-container p-3 rounded border border-outline-variant space-y-1">
-          <p><strong class="text-on-surface-variant">Request ID:</strong> <span class="text-primary">₹{reqId}</span></p>
-          <p><strong class="text-on-surface-variant">Assigned Supplier:</strong> ₹{supplier}</p>
-          <p><strong class="text-on-surface-variant">Current Stage:</strong> <span class="px-2 py-0.5 rounded bg-primary/20 text-primary">₹{stage}</span></p>
-          <p><strong class="text-on-surface-variant">Telemetry Reading:</strong> <span class="text-primary font-bold">₹{temp}</span></p>
+          <p><strong class="text-on-surface-variant">Request ID:</strong> <span class="text-primary">${reqId}</span></p>
+          <p><strong class="text-on-surface-variant">Assigned Supplier:</strong> ${supplier}</p>
+          <p><strong class="text-on-surface-variant">Current Stage:</strong> <span class="px-2 py-0.5 rounded bg-primary/20 text-primary">${stage}</span></p>
+          <p><strong class="text-on-surface-variant">Telemetry Reading:</strong> <span class="text-primary font-bold">${temp}</span></p>
           <p><strong class="text-on-surface-variant">BPMN Workflow:</strong> cold-chain-replenishment-main.bpmn</p>
         </div>
         <div class="bg-surface-container p-3 rounded border border-outline-variant">
@@ -1710,7 +1717,7 @@
         if (r3) r3.style.display = 'none';
         if (r4) r4.style.display = '';
       }
-      showToast('Filter Applied', `Table filtered to show: ₹{type.toUpperCase()}`, 'info');
+      showToast('Filter Applied', `Table filtered to show: ${type.toUpperCase()}`, 'info');
     });
   });
 
@@ -1757,7 +1764,7 @@
   let isFastRunning = false;
 
   if (btnFastAuto) {
-    btnFastAuto.addEventListener('click', () => {
+    btnFastAuto.addEventListener('click', async () => {
       if (isFastRunning) return;
       isFastRunning = true;
       btnFastAuto.disabled = true;
@@ -1769,59 +1776,57 @@
         if (stepperText) stepperText.textContent = msg;
       };
 
-      // Step 1: Approve Request (0.6s)
-      setStep(15, "Step 1/5: Store Manager approving REQ-1001 (Budget: ₹50,000)...");
-      showToast("Step 1: Request Approved", "Budget ₹50,000 confirmed for Store-12", "info");
+      // Call Real Camunda 8 Engine in backend
+      if (window.ZeebeClient) {
+        window.ZeebeClient.runFastHappyPath();
+      }
+
+      // Step 1: Store Approval (0.6s)
+      setStep(20, "⚡ Step 1/5: Store Manager approving REQ-1001 (Budget: ₹50,000)...");
+      const btnApprove = document.getElementById('btnApproveBatch');
+      if (btnApprove) {
+        btnApprove.innerHTML = '<span class="material-symbols-outlined text-[16px]">check</span> Approved (₹48,500)';
+        btnApprove.className = 'flex-1 py-1.5 px-3 rounded bg-primary/20 text-primary border border-primary/40 font-body-sm text-xs font-semibold flex items-center justify-center gap-1';
+      }
 
       setTimeout(() => {
-        const btnApprove = document.getElementById('btnApproveBatch');
-        if (btnApprove) {
-          btnApprove.innerHTML = '<span class="material-symbols-outlined text-[16px]">check</span> Approved (₹48,500)';
-          btnApprove.classList.remove('bg-primary');
-          btnApprove.classList.add('bg-primary/20', 'text-primary', 'border-primary/40');
-        }
-
-        // Step 2: Parallel Quotes Received & Ranked (1.2s)
-        setStep(40, "Step 2/5: Comparing regional dairy bids via FEEL ranking...");
-        showToast("Step 2: Quotes Evaluated", "Green Valley Dairy won with lowest bid: ₹32,000", "info");
+        // Step 2: Parallel Quotes Received & Ranked via FEEL (1.2s)
+        setStep(45, "⚡ Step 2/5: Bids ranked via FEEL: Green Valley Dairy selected (₹32,000)...");
 
         setTimeout(() => {
-          // Step 3: Sequential PO Dispatched (1.8s)
-          setStep(65, "Step 3/5: Purchase order PO-1001 auto-dispatched to Supplier API...");
-          showToast("Step 3: PO Dispatched", "Truck #TK-882 en route under cold-chain monitoring", "info");
+          // Step 3: Purchase Order Dispatched (1.8s)
+          setStep(70, "⚡ Step 3/5: Purchase order PO-1001 auto-dispatched. Truck #TK-882 en route...");
 
           setTimeout(() => {
-            // Step 4: Temperature Verification & Dock Receiving (2.5s)
-            setStep(85, "Step 4/5: Pallets arrived at Dock 4. Temperature verified at 3.8°C (Safe)...");
-            showToast("Step 4: Dock Inspection Passed", "350 units received intact without thermal excursion", "info");
+            // Step 4: Temperature Verification & Dock Receiving (2.4s)
+            setStep(88, "⚡ Step 4/5: Pallets arrived at Dock 4. Core temp 3.8°C verified safe (<= 8°C)...");
 
             setTimeout(() => {
-              // Step 5: 3-Way Match & Completion (3.2s)
-              setStep(100, "Step 5/5: Automated 3-Way Match verified (PO = GR = Invoice = ₹48,500). Completed!");
+              // Step 5: 3-Way Match & Completion (3.0s)
+              setStep(100, "⚡ Step 5/5: 100% 3-Way Match verified (PO = GR = Invoice = ₹48,500). Completed!");
               
               const btnDisc = document.getElementById('btnReviewDiscrepancy');
               if (btnDisc) {
                 btnDisc.innerHTML = '<span class="material-symbols-outlined text-[16px]">verified</span> 3-Way Match Settled';
-                btnDisc.classList.remove('bg-secondary-container/30', 'text-secondary');
-                btnDisc.classList.add('bg-primary/20', 'text-primary', 'border-primary/40');
+                btnDisc.className = 'w-full py-1.5 px-3 rounded bg-primary/20 text-primary border border-primary/40 font-body-sm text-xs font-semibold flex items-center justify-center gap-1';
               }
 
-              showToast("Replenishment Completed! 🎉", "Full cycle finished in 3.2s! Zero complications, ₹48,500 settled cleanly.", "success");
-              
+              showToast("Replenishment Completed! 🎉", "Full cycle finished in 3s! ₹48,500 settled cleanly.", "success");
+
               setTimeout(() => {
                 if (stepper) stepper.classList.add('hidden');
                 btnFastAuto.disabled = false;
                 isFastRunning = false;
               }, 2500);
 
-            }, 800);
-          }, 800);
-        }, 800);
-      }, 700);
+            }, 600);
+          }, 600);
+        }, 600);
+      }, 600);
     });
   }
 
-  // Quick Temp Spike Test & Auto-Triage
+  // Quick Temp Spike Test
   if (btnFastSpike) {
     btnFastSpike.addEventListener('click', () => {
       const banner = document.getElementById('excursionAlertBanner');
@@ -1846,8 +1851,7 @@
       const btnDisc = document.getElementById('btnReviewDiscrepancy');
       if (btnDisc) {
         btnDisc.innerHTML = '<span class="material-symbols-outlined text-[16px]">verified</span> 1-Click Bypass Approved';
-        btnDisc.classList.remove('bg-secondary-container/30', 'text-secondary');
-        btnDisc.classList.add('bg-primary/20', 'text-primary', 'border-primary/40');
+        btnDisc.className = 'w-full py-1.5 px-3 rounded bg-primary/20 text-primary border border-primary/40 font-body-sm text-xs font-semibold flex items-center justify-center gap-1';
       }
       showToast("1-Click 3-Way Match Approved", "₹700 fuel surcharge approved under tolerance. Payment scheduled.", "success");
     });
