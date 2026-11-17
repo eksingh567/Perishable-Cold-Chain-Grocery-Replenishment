@@ -163,20 +163,6 @@
   </style>
 </head>
 <body class="bg-background text-on-surface font-body-md antialiased min-h-screen flex flex-col selection:bg-primary-container selection:text-on-primary-container">
-
-<!-- ==================== DEV SANDBOX BANNER ==================== -->
-<div class="w-full bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-600 text-black text-xs font-bold py-1.5 px-4 flex items-center justify-between shadow-md z-50">
-  <div class="flex items-center gap-2 font-mono">
-    <span class="px-2 py-0.5 rounded bg-black/20 text-white uppercase text-[10px] tracking-wider font-extrabold">DEV SANDBOX COPY</span>
-    <span>🧪 Safe Development Environment — Modify files here without affecting production!</span>
-  </div>
-  <div class="flex items-center gap-3 text-[11px]">
-    <span>Branch: <code class="bg-black/20 text-white px-1.5 py-0.5 rounded">dev-sandbox</code></span>
-    <a href="http://localhost:3000" target="_blank" class="underline hover:text-white font-semibold">Main Production Site (Port 3000) ↗</a>
-  </div>
-</div>
-
-
 <!-- ==================== TOP NAVIGATION BAR (SHARED COMPONENT EXECUTION) ==================== -->
 <header class="flex justify-between items-center w-full px-margin-desktop py-2 bg-surface-container-lowest/80 dark:bg-surface-container-lowest/80 backdrop-blur-md sticky top-0 z-50 border-b border-outline-variant dark:border-outline-variant shadow-sm dark:shadow-none">
 <!-- Left: Brand Logo & Product Name -->
@@ -213,6 +199,10 @@
 <a class="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors pb-1" href="#" id="navLinkSettlements">
 <span class="material-symbols-outlined text-base" data-icon="account_balance">account_balance</span>
           Settlements
+        </a>
+<a class="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#ff3e00]/15 hover:bg-[#ff3e00]/25 border border-[#ff3e00]/40 text-[#ff3e00] font-semibold text-xs transition-colors" href="/camunda" target="_blank" id="navLinkCamunda">
+<span class="material-symbols-outlined text-[16px]">account_tree</span>
+          ⚡ Camunda Operate & Canvas
         </a>
 </nav>
 </div>

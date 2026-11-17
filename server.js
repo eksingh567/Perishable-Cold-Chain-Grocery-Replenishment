@@ -289,7 +289,9 @@ const MIME_TYPES = {
   '.json': 'application/json; charset=utf-8',
   '.png': 'image/png',
   '.svg': 'image/svg+xml',
-  '.ico': 'image/x-icon'
+  '.ico': 'image/x-icon',
+  '.bpmn': 'application/xml; charset=utf-8',
+  '.xml': 'application/xml; charset=utf-8'
 };
 
 const server = http.createServer((req, res) => {
@@ -404,6 +406,38 @@ const server = http.createServer((req, res) => {
       res.writeHead(404, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Endpoint not found' }));
       return;
+    }
+
+    // Camunda Canvas & BPMN Models Serving
+    if (pathname === '/camunda' || pathname === '/operate' || pathname === '/canvas') {
+      const camundaPage = path.join(FRONTEND_DIR, 'camunda-operate.html');
+      fs.readFile(camundaPage, (err, content) => {
+        if (err) {
+          res.writeHead(500, { 'Content-Type': 'text/plain' });
+          res.end('Error loading Camunda Operate page: ' + err.message);
+          return;
+        }
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+        res.end(content);
+      });
+      return;
+    }
+
+    if (pathname.startsWith('/bpmn/')) {
+      const bpmnFile = pathname.replace('/bpmn/', '');
+      const bpmnPath = path.join(BPMN_DIR, bpmnFile);
+      if (fs.existsSync(bpmnPath)) {
+        fs.readFile(bpmnPath, (err, content) => {
+          if (err) {
+            res.writeHead(500, { 'Content-Type': 'text/plain' });
+            res.end('Error reading BPMN model: ' + err.message);
+            return;
+          }
+          res.writeHead(200, { 'Content-Type': 'application/xml; charset=utf-8' });
+          res.end(content);
+        });
+        return;
+      }
     }
 
     // Static File Serving
