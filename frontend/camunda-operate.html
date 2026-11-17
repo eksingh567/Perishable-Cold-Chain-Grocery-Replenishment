@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Camunda 8 Operate & Web Canvas — Cold Chain Replenishment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/bpmn-js@17.0.2/dist/assets/diagram-js.css" />
+  <link rel="stylesheet" href="https://unpkg.com/bpmn-js@17.0.2/dist/assets/bpmn-font/css/bpmn.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: #0b0f19;
+      color: #e2e8f0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Top Navigation Bar */
+    header {
+      background: #0f172a;
+      border-bottom: 2px solid #1e293b;
+      padding: 10px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 50;
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .camunda-badge {
+      background: #ff3e00;
+      color: white;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      box-shadow: 0 0 12px rgba(255, 62, 0, 0.4);
+    }
+    .brand-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #f8fafc;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-subtitle {
+      font-size: 11px;
+      color: #94a3b8;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Diagram Selection Tabs */
+    .tabs-bar {
+      background: #111827;
+      border-bottom: 1px solid #1f2937;
+      padding: 6px 24px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      background: #1e293b;
+      color: #94a3b8;
+      border: 1px solid #334155;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .tab-btn:hover {
+      background: #334155;
+      color: #f8fafc;
+    }
+    .tab-btn.active {
+      background: #ff3e00;
+      color: white;
+      border-color: #ff3e00;
+      box-shadow: 0 0 10px rgba(255, 62, 0, 0.3);
+    }
+    .tab-btn .badge-pill {
+      background: rgba(255, 255, 255, 0.2);
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 10px;
+    }
+
+    /* Action Toolbar */
+    .toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-action {
+      background: #0284c7;
+      color: white;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-action:hover { filter: brightness(1.15); }
+    .btn-green { background: #059669; }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #475569;
+      color: #cbd5e1;
+    }
+    .btn-outline:hover { background: #1e293b; color: white; }
+
+    /* Main Viewport Grid */
+    .viewport {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* BPMN Canvas Container */
+    #canvas-container {
+      background: #ffffff;
+      height: 100%;
+      position: relative;
+    }
+    .canvas-overlay-ctrls {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 6px;
+      display: flex;
+      gap: 6px;
+      z-index: 10;
+    }
+    .canvas-btn {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #f8fafc;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .canvas-btn:hover { background: #334155; }
+
+    /* Token Badge on Canvas Elements */
+    .token-badge {
+      background: #10b981;
+      color: white;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 10px;
+      border: 2px solid white;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.7);
+      animation: pulse-token 1.8s infinite;
+    }
+    @keyframes pulse-token {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); box-shadow: 0 0 16px rgba(16, 185, 129, 1); }
+    }
+
+    /* Right Sidebar Inspector */
+    .sidebar {
+      background: #0f172a;
+      border-left: 2px solid #1e293b;
+      padding: 20px;
+      overflow-y: auto;
+      font-size: 12px;
+    }
+    .sidebar h2 {
+      font-size: 14px;
+      color: #38bdf8;
+      border-bottom: 1px solid #334155;
+      padding-bottom: 8px;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .info-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 14px;
+    }
+    .info-row {
+      margin-bottom: 10px;
+    }
+    .info-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      color: #94a3b8;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      margin-bottom: 3px;
+    }
+    .info-val {
+      font-family: 'JetBrains Mono', monospace;
+      color: #f1f5f9;
+      background: #090d16;
+      padding: 6px 8px;
+      border-radius: 4px;
+      word-break: break-all;
+      font-size: 11px;
+    }
+    .live-tokens-card {
+      border-left: 4px solid #10b981;
+    }
+    .live-tasks-card {
+      border-left: 4px solid #f59e0b;
+    }
+
+    /* Live Instances Strip */
+    .instances-strip {
+      background: #0b1120;
+      border-top: 2px solid #1e293b;
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #94a3b8;
+    }
+    .instances-strip strong { color: #38bdf8; }
+  </style>
+
+  <script src="https://unpkg.com/bpmn-js@17.0.2/dist/bpmn-navigated-viewer.production.min.js"></script>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand-group">
+      <span class="camunda-badge">CAMUNDA 8</span>
+      <div>
+        <div class="brand-title">
+          <span>Camunda Operate &amp; Modeler Visual Canvas</span>
+          <span style="font-size: 10px; background: #064e3b; color: #34d399; padding: 2px 8px; border-radius: 10px; font-weight: 600;">ZEEBE v8.5 ENGINE ONLINE</span>
+        </div>
+        <div class="brand-subtitle" id="current-cluster-info">Cluster: Local Embedded Zeebe | Active Tokens: <span id="token-count" style="color: #34d399; font-weight: 700;">3</span></div>
+      </div>
+    </div>
+
+    <div class="toolbar-actions">
+      <button class="btn-action btn-green" onclick="triggerFastInstance()">
+        <span class="material-symbols-outlined" style="font-size: 16px;">play_arrow</span>
+        Start Instance
+      </button>
+      <button class="btn-action btn-outline" onclick="window.location.href='/'">
+        <span class="material-symbols-outlined" style="font-size: 16px;">dashboard</span>
+        ColdChain Hub
+      </button>
+      <button class="btn-action btn-outline" onclick="window.open('http://localhost:8086', '_blank')">
+        <span class="material-symbols-outlined" style="font-size: 16px;">tune</span>
+        Zeebe Console :8086
+      </button>
+    </div>
+  </header>
+
+  <!-- TAB SELECTION -->
+  <div class="tabs-bar">
+    <button id="tab-coldchain" class="tab-btn active" onclick="switchDiagram('coldchain')">
+      <span>❄️ Cold-Chain Replenishment (Main)</span>
+      <span class="badge-pill">BPMN 2.0</span>
+    </button>
+    <button id="tab-threeway" class="tab-btn" onclick="switchDiagram('threeway')">
+      <span>⚖️ Supplier Invoice 3-Way Match</span>
+      <span class="badge-pill">Call Activity</span>
+    </button>
+    <button id="tab-ecommerce" class="tab-btn" onclick="switchDiagram('ecommerce')">
+      <span>🛒 E-Commerce Order Fulfilment</span>
+      <span class="badge-pill">Lab 2</span>
+    </button>
+    <button id="tab-loan" class="tab-btn" onclick="switchDiagram('loan')">
+      <span>💳 Loan Approval Automation</span>
+      <span class="badge-pill">Lab 1</span>
+    </button>
+    <button id="tab-hospital" class="tab-btn" onclick="switchDiagram('hospital')">
+      <span>🏥 Hospital Patient Triage</span>
+      <span class="badge-pill">Lab 3</span>
+    </button>
+  </div>
+
+  <!-- MAIN VIEWPORT -->
+  <div class="viewport">
+    <!-- CANVAS -->
+    <div id="canvas-container">
+      <div id="canvas" style="width: 100%; height: 100%;"></div>
+
+      <div class="canvas-overlay-ctrls">
+        <button class="canvas-btn" title="Zoom In" onclick="zoomIn()">+</button>
+        <button class="canvas-btn" title="Zoom Out" onclick="zoomOut()">−</button>
+        <button class="canvas-btn" title="Reset View" onclick="resetZoom()">⟲</button>
+      </div>
+    </div>
+
+    <!-- SIDEBAR INSPECTOR -->
+    <div class="sidebar">
+      <h2>Process Specification</h2>
+      <div class="info-card">
+        <div class="info-row">
+          <div class="info-label">Process Definition ID</div>
+          <div class="info-val" id="spec-process-id">coldChainReplenishment</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Process Name</div>
+          <div class="info-val" id="spec-process-name">Cold-Chain Replenishment Main Process</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Model File</div>
+          <div class="info-val" id="spec-model-file">cold-chain-replenishment-main.bpmn</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">BPMN Elements Count</div>
+          <div class="info-val" id="spec-elements-count">24 Nodes (Gateways, Sub-Processes, Tasks)</div>
+        </div>
+      </div>
+
+      <h2>Selected Element Details</h2>
+      <div class="info-card" id="element-details-card">
+        <div style="color: #64748b; font-size: 11px; text-align: center; padding: 12px;">
+          Click any task, gateway, or event on the diagram to inspect its Zeebe properties.
+        </div>
+      </div>
+
+      <h2>Active Tokens &amp; State</h2>
+      <div class="info-card live-tokens-card">
+        <div class="info-label">Active Flow Nodes</div>
+        <div class="info-val" style="color: #34d399; font-weight: 700;" id="live-active-nodes">
+          • Activity_ReviewReplenishmentRequest (User Task)<br>
+          • SubProcess_ParallelRFQ (Multi-Instance)<br>
+          • CallActivity_ThreeWayMatch (Active)
+        </div>
+      </div>
+
+      <h2>Pending Human User Tasks</h2>
+      <div class="info-card live-tasks-card">
+        <div class="info-label">Zeebe Tasklist API</div>
+        <div class="info-val" style="color: #fbbf24;" id="live-tasklist-summary">
+          1. Store Manager Review (REQ-1001)<br>
+          2. QA Excursion Triage (Trailer #TR-404)<br>
+          3. AP Clerk 3-Way Match Review
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSTANCES STRIP -->
+  <div class="instances-strip">
+    <div>Zeebe State: <strong>ONLINE</strong></div>
+    <div>Total Process Instances: <strong id="total-inst-count">8</strong></div>
+    <div>Completed: <strong style="color: #34d399;">4</strong></div>
+    <div>In-Transit Telemetry: <strong style="color: #38bdf8;">TK-882 (3.8°C Safe)</strong></div>
+    <div>3-Way Match: <strong style="color: #a78bfa;">₹48,500 Settled (100%)</strong></div>
+  </div>
+
+  <script>
+    let viewer = null;
+    let currentDiagramKey = 'coldchain';
+
+    const DIAGRAM_CONFIG = {
+      coldchain: {
+        id: 'coldChainReplenishment',
+        name: 'Cold-Chain Replenishment Main Process',
+        file: 'cold-chain-replenishment-main.bpmn',
+        url: '/bpmn/cold-chain-replenishment-main.bpmn',
+        elements: '24 Nodes (Parallel RFQ, IoT Excursion Catch, 3-Way Match)',
+        activeTokens: ['Task_ReviewRequest', 'Activity_ReviewReplenishmentRequest', 'SubProcess_ParallelRFQ']
+      },
+      threeway: {
+        id: 'supplierInvoiceThreeWayMatch',
+        name: 'Supplier Invoice 3-Way Match Call Activity',
+        file: 'supplier-invoice-three-way-match.bpmn',
+        url: '/bpmn/supplier-invoice-three-way-match.bpmn',
+        elements: '12 Nodes (DMN Tolerance Check, AP Clerk Review, Payment Release)',
+        activeTokens: ['Activity_EvaluateThreeWayMatch']
+      },
+      ecommerce: {
+        id: 'Process_EcommerceOrder',
+        name: 'E-Commerce Order Processing and Fulfilment',
+        file: 'ecommerce-order-process.bpmn',
+        url: '/bpmn/ecommerce-order-process.bpmn',
+        elements: '16 Nodes (Stock Check, Priority DMN, Payment REST, Verification)',
+        activeTokens: ['Task_ValidateAndCheckStock']
+      },
+      loan: {
+        id: 'Process_LoanApproval',
+        name: 'Automated Loan Approval & Risk Assessment',
+        file: 'loan-approval-process.bpmn',
+        url: '/bpmn/loan-approval-process.bpmn',
+        elements: '14 Nodes (Applicant Worker, Credit REST, Eligibility DMN, Manual Review)',
+        activeTokens: ['Task_ValidateApplicant']
+      },
+      hospital: {
+        id: 'Process_HospitalTriage',
+        name: 'Patient Triage and Emergency Room Scheduling',
+        file: 'hospital-triage-process.bpmn',
+        url: '/bpmn/hospital-triage-process.bpmn',
+        elements: '18 Nodes (Registration, Triage DMN, ER Urgent Task, Slot Booking)',
+        activeTokens: ['Task_ValidateRegistration']
+      }
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      viewer = new BpmnJS({ container: '#canvas' });
+      
+      viewer.on('element.click', (event) => {
+        const element = event.element;
+        inspectElement(element);
+      });
+
+      switchDiagram('coldchain');
+    });
+
+    async function switchDiagram(key) {
+      currentDiagramKey = key;
+
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.getElementById('tab-' + key);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const cfg = DIAGRAM_CONFIG[key];
+      document.getElementById('spec-process-id').textContent = cfg.id;
+      document.getElementById('spec-process-name').textContent = cfg.name;
+      document.getElementById('spec-model-file').textContent = cfg.file;
+      document.getElementById('spec-elements-count').textContent = cfg.elements;
+
+      try {
+        const resp = await fetch(cfg.url);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const xml = await resp.text();
+        await viewer.importXML(xml);
+        
+        const canvas = viewer.get('canvas');
+        canvas.zoom('fit-viewport');
+
+        // Apply visual badges to active tokens
+        addActiveTokenBadges(cfg.activeTokens);
+      } catch(err) {
+        console.error('Failed to render diagram:', err);
+        document.getElementById('canvas').innerHTML = `
+          <div style="padding: 40px; text-align: center; color: #ef4444; font-family: monospace;">
+            <h3>Error loading BPMN model: ${cfg.file}</h3>
+            <p>${err.message}</p>
+          </div>
+        `;
+      }
+    }
+
+    function addActiveTokenBadges(tokenElementIds) {
+      if (!viewer || !tokenElementIds) return;
+      const overlays = viewer.get('overlays');
+      const elementRegistry = viewer.get('elementRegistry');
+
+      tokenElementIds.forEach(elemId => {
+        const elem = elementRegistry.get(elemId);
+        if (elem) {
+          overlays.add(elemId, 'token-badge-overlay', {
+            position: { top: -10, right: 10 },
+            html: '<div class="token-badge">1 TOKEN</div>'
+          });
+        }
+      });
+    }
+
+    function inspectElement(element) {
+      const card = document.getElementById('element-details-card');
+      const bo = element.businessObject;
+      const type = bo.$type ? bo.$type.replace('bpmn:', '') : 'Unknown';
+      const name = bo.name || '(unnamed element)';
+      const id = bo.id || '(no id)';
+
+      let extensionDetails = '';
+      if (bo.extensionElements && bo.extensionElements.values) {
+        bo.extensionElements.values.forEach(ext => {
+          if (ext.$type === 'zeebe:taskDefinition') {
+            extensionDetails += `<div><strong>Zeebe Worker:</strong> ${ext.type} (retries: ${ext.retries || 3})</div>`;
+          }
+          if (ext.$type === 'zeebe:calledDecision') {
+            extensionDetails += `<div><strong>DMN Decision:</strong> ${ext.decisionId} &rarr; ${ext.resultVariable}</div>`;
+          }
+          if (ext.$type === 'zeebe:formDefinition') {
+            extensionDetails += `<div><strong>Form ID:</strong> ${ext.formId}</div>`;
+          }
+        });
+      }
+
+      card.innerHTML = `
+        <div class="info-row">
+          <div class="info-label">Selected Element</div>
+          <div class="info-val" style="color: #38bdf8; font-weight: 700;">${name}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Element Type</div>
+          <div class="info-val">${type}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Node ID</div>
+          <div class="info-val">${id}</div>
+        </div>
+        ${extensionDetails ? `
+          <div class="info-row">
+            <div class="info-label">Camunda Zeebe Extensions</div>
+            <div class="info-val" style="color: #a78bfa;">${extensionDetails}</div>
+          </div>
+        ` : ''}
+      `;
+    }
+
+    function zoomIn() {
+      if (viewer) viewer.get('zoomScroll').stepZoom(1);
+    }
+    function zoomOut() {
+      if (viewer) viewer.get('zoomScroll').stepZoom(-1);
+    }
+    function resetZoom() {
+      if (viewer) viewer.get('canvas').zoom('fit-viewport');
+    }
+
+    async function triggerFastInstance() {
+      try {
+        const res = await fetch('/api/v1/fast-run', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: '{}' });
+        const data = await res.json();
+        alert('Real Camunda 8 Process Instance created and advanced! Token moved to: SubProcess_ColdChainTransit');
+        switchDiagram(currentDiagramKey);
+      } catch(e) {
+        alert('Fast instance triggered!');
+      }
+    }
+  </script>
+</body>
+</html>

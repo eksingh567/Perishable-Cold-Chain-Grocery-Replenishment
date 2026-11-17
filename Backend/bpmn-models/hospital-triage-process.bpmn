@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+                  xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" 
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                  id="Definitions_HospitalTriage" 
+                  targetNamespace="http://bpmn.io/schema/bpmn"
+                  exporter="Camunda Modeler" 
+                  exporterVersion="5.20.0">
+  <bpmn:process id="Process_HospitalTriage" name="End-to-End Hospital Appointment and Patient Triage Management" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_PatientRegistered" name="Patient Registration Initiated">
+      <bpmn:outgoing>Flow_ToValidateRegistration</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <bpmn:serviceTask id="Task_ValidateRegistration" name="Validate Patient Registration Fields">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="validate-patient-registration" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ToValidateRegistration</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToRegistrationGateway</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:exclusiveGateway id="Gateway_RegistrationValid" name="Valid Registration Data?">
+      <bpmn:incoming>Flow_ToRegistrationGateway</bpmn:incoming>
+      <bpmn:outgoing>Flow_RegistrationValid</bpmn:outgoing>
+      <bpmn:outgoing>Flow_RegistrationInvalid</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:businessRuleTask id="Task_ClassifyTriage" name="Classify Patient Triage (DMN)">
+      <bpmn:extensionElements>
+        <zeebe:calledDecision decisionId="Decision_PatientTriage" resultVariable="triageCategory" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_RegistrationValid</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToTriageRouting</bpmn:outgoing>
+    </bpmn:businessRuleTask>
+
+    <bpmn:exclusiveGateway id="Gateway_TriageRouting" name="Triage Routing">
+      <bpmn:incoming>Flow_ToTriageRouting</bpmn:incoming>
+      <bpmn:outgoing>Flow_UrgentAssessment</bpmn:outgoing>
+      <bpmn:outgoing>Flow_PriorityReview</bpmn:outgoing>
+      <bpmn:outgoing>Flow_RoutinePath</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <!-- Urgent Assessment Task with Form -->
+    <bpmn:userTask id="Task_UrgentAssessment" name="Immediate Human Assessment (ER Staff)">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="Form_UrgentAssessment" />
+        <zeebe:assignmentDefinition candidateGroups="emergency-team" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_UrgentAssessment</bpmn:incoming>
+      <bpmn:outgoing>Flow_UrgentCompleted</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <!-- Priority Review Task with Form -->
+    <bpmn:userTask id="Task_PriorityReview" name="Priority Medical Staff Review (Tasklist)">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="Form_PriorityStaffReview" />
+        <zeebe:assignmentDefinition candidateGroups="clinical-staff" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_PriorityReview</bpmn:incoming>
+      <bpmn:outgoing>Flow_PriorityCompleted</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:serviceTask id="Task_CheckAppointmentSlots" name="Query Scheduling API REST Connector">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultVariable" value="schedulingResponse" />
+        </zeebe:taskHeaders>
+        <zeebe:ioMapping>
+          <zeebe:input source="=&quot;POST&quot;" target="method" />
+          <zeebe:input source="=&quot;http://localhost:8083/api/scheduling/check-slots&quot;" target="url" />
+          <zeebe:input source="={ &quot;patientRef&quot;: patientRef, &quot;appointmentPreference&quot;: appointmentPreference }" target="body" />
+          <zeebe:input source="=20" target="connectionTimeoutInSeconds" />
+          <zeebe:output source="=schedulingResponse.body.hasAvailableSlots" target="hasAvailableSlots" />
+          <zeebe:output source="=schedulingResponse.body.allocatedSlot" target="allocatedSlot" />
+          <zeebe:output source="=schedulingResponse.body.bookingStatus" target="bookingStatus" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_RoutinePath</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToSlotGateway</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:exclusiveGateway id="Gateway_SlotAvailability" name="Slot Available?">
+      <bpmn:incoming>Flow_ToSlotGateway</bpmn:incoming>
+      <bpmn:outgoing>Flow_SlotFound</bpmn:outgoing>
+      <bpmn:outgoing>Flow_NoSlotsFound</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <!-- Reschedule Task with Form -->
+    <bpmn:userTask id="Task_ManualRescheduleReview" name="Manual Slot Rescheduling Review (Tasklist)">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="Form_ManualReschedule" />
+        <zeebe:assignmentDefinition candidateGroups="hospital-administrators" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_NoSlotsFound</bpmn:incoming>
+      <bpmn:outgoing>Flow_ManualRescheduled</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <!-- Joining Gateway for Booked Appointments -->
+    <bpmn:exclusiveGateway id="Gateway_JoinBooked">
+      <bpmn:incoming>Flow_SlotFound</bpmn:incoming>
+      <bpmn:incoming>Flow_ManualRescheduled</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToBookedEnd</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:endEvent id="EndEvent_Booked" name="Appointment Confirmed">
+      <bpmn:incoming>Flow_ToBookedEnd</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:endEvent id="EndEvent_UrgentHandled" name="Transferred to ER Care">
+      <bpmn:incoming>Flow_UrgentCompleted</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:endEvent id="EndEvent_PriorityProcessed" name="Priority Appointment Finalised">
+      <bpmn:incoming>Flow_PriorityCompleted</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:endEvent id="EndEvent_RegistrationFailed" name="Registration Terminated">
+      <bpmn:incoming>Flow_RegistrationInvalid</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:sequenceFlow id="Flow_ToValidateRegistration" sourceRef="StartEvent_PatientRegistered" targetRef="Task_ValidateRegistration" />
+    <bpmn:sequenceFlow id="Flow_ToRegistrationGateway" sourceRef="Task_ValidateRegistration" targetRef="Gateway_RegistrationValid" />
+    <bpmn:sequenceFlow id="Flow_RegistrationValid" name="Valid" sourceRef="Gateway_RegistrationValid" targetRef="Task_ClassifyTriage">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=isRegistrationValid = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_RegistrationInvalid" name="Invalid Fields" sourceRef="Gateway_RegistrationValid" targetRef="EndEvent_RegistrationFailed">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=isRegistrationValid = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_ToTriageRouting" sourceRef="Task_ClassifyTriage" targetRef="Gateway_TriageRouting" />
+    <bpmn:sequenceFlow id="Flow_UrgentAssessment" name="Urgent Assessment" sourceRef="Gateway_TriageRouting" targetRef="Task_UrgentAssessment">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=triageCategory = "Urgent Assessment"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_PriorityReview" name="Priority Review" sourceRef="Gateway_TriageRouting" targetRef="Task_PriorityReview">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=triageCategory = "Priority Review"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_RoutinePath" name="Routine" sourceRef="Gateway_TriageRouting" targetRef="Task_CheckAppointmentSlots">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=triageCategory = "Routine"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_ToSlotGateway" sourceRef="Task_CheckAppointmentSlots" targetRef="Gateway_SlotAvailability" />
+    <bpmn:sequenceFlow id="Flow_SlotFound" name="Slot Available" sourceRef="Gateway_SlotAvailability" targetRef="Gateway_JoinBooked">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=hasAvailableSlots = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_NoSlotsFound" name="No Slots Available" sourceRef="Gateway_SlotAvailability" targetRef="Task_ManualRescheduleReview">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=hasAvailableSlots = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_ManualRescheduled" sourceRef="Task_ManualRescheduleReview" targetRef="Gateway_JoinBooked" />
+    <bpmn:sequenceFlow id="Flow_ToBookedEnd" sourceRef="Gateway_JoinBooked" targetRef="EndEvent_Booked" />
+    <bpmn:sequenceFlow id="Flow_UrgentCompleted" sourceRef="Task_UrgentAssessment" targetRef="EndEvent_UrgentHandled" />
+    <bpmn:sequenceFlow id="Flow_PriorityCompleted" sourceRef="Task_PriorityReview" targetRef="EndEvent_PriorityProcessed" />
+  </bpmn:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_3">
+    <bpmndi:BPMNPlane id="BPMNPlane_3" bpmnElement="Process_HospitalTriage">
+      <bpmndi:BPMNShape id="StartEvent_PatientRegistered_di" bpmnElement="StartEvent_PatientRegistered">
+        <dc:Bounds x="152" y="242" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="126" y="285" width="89" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ValidateRegistration_di" bpmnElement="Task_ValidateRegistration">
+        <dc:Bounds x="240" y="220" width="130" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_RegistrationValid_di" bpmnElement="Gateway_RegistrationValid" isMarkerVisible="true">
+        <dc:Bounds x="425" y="235" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="407" y="205" width="87" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ClassifyTriage_di" bpmnElement="Task_ClassifyTriage">
+        <dc:Bounds x="530" y="220" width="130" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_TriageRouting_di" bpmnElement="Gateway_TriageRouting" isMarkerVisible="true">
+        <dc:Bounds x="715" y="235" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="704" y="211" width="72" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_UrgentAssessment_di" bpmnElement="Task_UrgentAssessment">
+        <dc:Bounds x="830" y="80" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PriorityReview_di" bpmnElement="Task_PriorityReview">
+        <dc:Bounds x="830" y="220" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CheckAppointmentSlots_di" bpmnElement="Task_CheckAppointmentSlots">
+        <dc:Bounds x="830" y="360" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_SlotAvailability_di" bpmnElement="Gateway_SlotAvailability" isMarkerVisible="true">
+        <dc:Bounds x="1035" y="375" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1022" y="345" width="76" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ManualRescheduleReview_di" bpmnElement="Task_ManualRescheduleReview">
+        <dc:Bounds x="1150" y="440" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_JoinBooked_di" bpmnElement="Gateway_JoinBooked" isMarkerVisible="true">
+        <dc:Bounds x="1275" y="375" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_Booked_di" bpmnElement="EndEvent_Booked">
+        <dc:Bounds x="1392" y="382" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1379" y="425" width="62" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_UrgentHandled_di" bpmnElement="EndEvent_UrgentHandled">
+        <dc:Bounds x="1392" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1375" y="145" width="71" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_PriorityProcessed_di" bpmnElement="EndEvent_PriorityProcessed">
+        <dc:Bounds x="1392" y="242" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1381" y="285" width="58" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_RegistrationFailed_di" bpmnElement="EndEvent_RegistrationFailed">
+        <dc:Bounds x="1392" y="562" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1381" y="605" width="58" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_ToValidateRegistration_di" bpmnElement="Flow_ToValidateRegistration">
+        <di:waypoint x="188" y="260" />
+        <di:waypoint x="240" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ToRegistrationGateway_di" bpmnElement="Flow_ToRegistrationGateway">
+        <di:waypoint x="370" y="260" />
+        <di:waypoint x="425" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RegistrationValid_di" bpmnElement="Flow_RegistrationValid">
+        <di:waypoint x="475" y="260" />
+        <di:waypoint x="530" y="260" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="491" y="242" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RegistrationInvalid_di" bpmnElement="Flow_RegistrationInvalid">
+        <di:waypoint x="450" y="285" />
+        <di:waypoint x="450" y="580" />
+        <di:waypoint x="1392" y="580" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="466" y="553" width="67" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ToTriageRouting_di" bpmnElement="Flow_ToTriageRouting">
+        <di:waypoint x="660" y="260" />
+        <di:waypoint x="715" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_UrgentAssessment_di" bpmnElement="Flow_UrgentAssessment">
+        <di:waypoint x="740" y="235" />
+        <di:waypoint x="740" y="120" />
+        <di:waypoint x="830" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="746" y="146" width="61" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PriorityReview_di" bpmnElement="Flow_PriorityReview">
+        <di:waypoint x="765" y="260" />
+        <di:waypoint x="830" y="260" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="762" y="242" width="73" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RoutinePath_di" bpmnElement="Flow_RoutinePath">
+        <di:waypoint x="740" y="285" />
+        <di:waypoint x="740" y="400" />
+        <di:waypoint x="830" y="400" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="751" y="373" width="39" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ToSlotGateway_di" bpmnElement="Flow_ToSlotGateway">
+        <di:waypoint x="970" y="400" />
+        <di:waypoint x="1035" y="400" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SlotFound_di" bpmnElement="Flow_SlotFound">
+        <di:waypoint x="1085" y="400" />
+        <di:waypoint x="1275" y="400" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1146" y="382" width="68" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_NoSlotsFound_di" bpmnElement="Flow_NoSlotsFound">
+        <di:waypoint x="1060" y="425" />
+        <di:waypoint x="1060" y="480" />
+        <di:waypoint x="1150" y="480" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1052" y="453" width="90" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ManualRescheduled_di" bpmnElement="Flow_ManualRescheduled">
+        <di:waypoint x="1290" y="480" />
+        <di:waypoint x="1300" y="480" />
+        <di:waypoint x="1300" y="425" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ToBookedEnd_di" bpmnElement="Flow_ToBookedEnd">
+        <di:waypoint x="1325" y="400" />
+        <di:waypoint x="1392" y="400" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_UrgentCompleted_di" bpmnElement="Flow_UrgentCompleted">
+        <di:waypoint x="970" y="120" />
+        <di:waypoint x="1392" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PriorityCompleted_di" bpmnElement="Flow_PriorityCompleted">
+        <di:waypoint x="970" y="260" />
+        <di:waypoint x="1392" y="260" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
